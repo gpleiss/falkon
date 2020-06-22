@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>&lt;no title&gt; &mdash; falkon 0.5.0 documentation</title>
+  <title>Getting Started &mdash; falkon 0.5.0 documentation</title>
   
 
   
@@ -239,13 +239,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>&lt;no title&gt;</li>
+      <li>Getting Started</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/references.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/get_started.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -282,17 +282,30 @@
     text-align: unset;
 }
 </style>
-<span class="target" id="references"></span><dl class="citation">
-<dt class="label" id="libflk"><span class="brackets">LIBFLK</span></dt>
-<dd><p>Falkon Lib</p>
-</dd>
-<dt class="label" id="thflk"><span class="brackets">THFLK</span></dt>
-<dd><p>Falkon</p>
-</dd>
-<dt class="label" id="logflk"><span class="brackets">LOGFLK</span></dt>
-<dd><p>LogFalkon</p>
-</dd>
-</dl>
+<div class="section" id="getting-started">
+<span id="get-started"></span><h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Once Falkon is installed, getting started is easy. The basic setup to use the <cite>Falkon</cite> estimator only requires
+few lines of code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_boston</span>
+<span class="kn">from</span> <span class="nn">falkon</span> <span class="kn">import</span> <span class="n">Falkon</span><span class="p">,</span> <span class="n">kernels</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">load_boston</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Falkon</span><span class="p">(</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
+    <span class="n">penalty</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+    <span class="n">M</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more detailed examples, have a look at the <a class="reference internal" href="examples/examples.html#examples"><span class="std std-ref">example notebooks</span></a>.</p>
+</div>
 
 
            </div>
