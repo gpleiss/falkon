@@ -100,7 +100,11 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-installation">Testing the installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#passing-options">Passing Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="get_started.html#more-examples">More Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/simple_regression.html">Falkon Regression Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="examples/simple_regression.html#Introduction">Introduction</a></li>
@@ -157,6 +161,10 @@
 <li class="toctree-l4"><a class="reference internal" href="api_reference/kernels.html#linear-kernel">Linear kernel</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/options.html">falkon.options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api_reference/options.html#falkonoptions">FalkonOptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference/gsc_losses.html">falkon.gsc_losses</a><ul>
@@ -435,13 +443,20 @@
         <li><a href="api_reference/outofcore.html#module-falkon.ooc_ops">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     falkon.optim
 
       <ul>
         <li><a href="api_reference/optimization.html#module-falkon.optim">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    falkon.options
+
+      <ul>
+        <li><a href="api_reference/options.html#module-falkon.options">module</a>
 </li>
       </ul></li>
       <li>
@@ -459,6 +474,8 @@
 </li>
       </ul></li>
       <li><a href="api_reference/optimization.html#falkon.optim.FalkonConjugateGradient">FalkonConjugateGradient (class in falkon.optim)</a>
+</li>
+      <li><a href="api_reference/options.html#falkon.options.FalkonOptions">FalkonOptions (class in falkon.options)</a>
 </li>
       <li><a href="api_reference/preconditioner.html#falkon.preconditioner.FalkonPreconditioner">FalkonPreconditioner (class in falkon.preconditioner)</a>
 </li>
@@ -569,6 +586,8 @@
         <li><a href="api_reference/outofcore.html#module-falkon.ooc_ops">falkon.ooc_ops</a>
 </li>
         <li><a href="api_reference/optimization.html#module-falkon.optim">falkon.optim</a>
+</li>
+        <li><a href="api_reference/options.html#module-falkon.options">falkon.options</a>
 </li>
         <li><a href="api_reference/preconditioner.html#module-falkon.preconditioner">falkon.preconditioner</a>
 </li>

@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="falkon.preconditioner" href="preconditioner.html" />
-    <link rel="prev" title="falkon.kernels" href="kernels.html" /> 
+    <link rel="prev" title="falkon.options" href="options.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -102,7 +102,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-installation">Testing the installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../get_started.html#passing-options">Passing Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../get_started.html#more-examples">More Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/simple_regression.html">Falkon Regression Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../examples/simple_regression.html#Introduction">Introduction</a></li>
@@ -159,6 +163,10 @@
 <li class="toctree-l4"><a class="reference internal" href="kernels.html#linear-kernel">Linear kernel</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">falkon.options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="options.html#falkonoptions">FalkonOptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">falkon.gsc_losses</a><ul>
@@ -293,7 +301,7 @@
 <h2>Loss<a class="headerlink" href="#loss" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="falkon.gsc_losses.Loss">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.gsc_losses.</code><code class="sig-name descname">Loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">falkon.kernels.kernel.Kernel</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">falkon.options.FalkonOptions</span> <span class="o">=</span> <span class="default_value">FalkonOptions(keops_acc_dtype='auto', keops_sum_scheme='auto', no_keops=False, chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.Loss" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.gsc_losses.</code><code class="sig-name descname">Loss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">falkon.kernels.kernel.Kernel</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a></span> <span class="o">=</span> <span class="default_value">FalkonOptions(keops_acc_dtype='auto', keops_sum_scheme='auto', no_keops=False, chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.Loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract generalized self-concordant loss function class.</p>
 <p>Such loss functions must be three times differentiable; but for the LogFalkon algorithm
 only the first two derivatives are used.
@@ -365,7 +373,7 @@ number of samples <span class="math notranslate nohighlight">\(n\)</span>, this 
 <h2>Logistic loss<a class="headerlink" href="#logistic-loss" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="falkon.gsc_losses.LogisticLoss">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.gsc_losses.</code><code class="sig-name descname">LogisticLoss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">falkon.kernels.kernel.Kernel</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">falkon.options.FalkonOptions</span> <span class="o">=</span> <span class="default_value">FalkonOptions(keops_acc_dtype='auto', keops_sum_scheme='auto', no_keops=False, chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.LogisticLoss" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.gsc_losses.</code><code class="sig-name descname">LogisticLoss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">falkon.kernels.kernel.Kernel</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a></span> <span class="o">=</span> <span class="default_value">FalkonOptions(keops_acc_dtype='auto', keops_sum_scheme='auto', no_keops=False, chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.LogisticLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for the logistic loss, to be used in conjunction with the <cite>LogisticFalkon</cite> estimator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -454,7 +462,7 @@ products.</p>
         <a href="preconditioner.html" class="btn btn-neutral float-right" title="falkon.preconditioner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="kernels.html" class="btn btn-neutral float-left" title="falkon.kernels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="options.html" class="btn btn-neutral float-left" title="falkon.options" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

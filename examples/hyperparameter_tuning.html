@@ -102,7 +102,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-installation">Testing the installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../get_started.html#passing-options">Passing Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../get_started.html#more-examples">More Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="simple_regression.html">Falkon Regression Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="simple_regression.html#Introduction">Introduction</a></li>
@@ -159,6 +163,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../api_reference/kernels.html#linear-kernel">Linear kernel</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_reference/options.html">falkon.options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api_reference/options.html#falkonoptions">FalkonOptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/gsc_losses.html">falkon.gsc_losses</a><ul>
@@ -669,6 +677,7 @@ First label vector:  tensor([0., 0., 1., 0., 0., 0., 0., 0., 0., 0.])
 </div>
 <p>The parameter settings which will be explored by the grid-search are: - four different kernel length-scales (varying around small positive numbers, which are usually good for normalized data) - four different regularization values - two different values for M: the number of inducing points. As we will see, a larger <code class="docutils literal notranslate"><span class="pre">M</span></code> is almost always better than a smaller one (but it leads to longer training times). Of course this is not the case if the dataset is easy to overfit, since reducing <code class="docutils literal notranslate"><span class="pre">M</span></code> may
 also provide additional regularization.</p>
+<p>When we create the estimator we pass it additional parameters via the <code class="docutils literal notranslate"><span class="pre">FalkonOptions</span></code> class. In our case we want to ensure that the model runs on the CPU by setting <code class="docutils literal notranslate"><span class="pre">use_cpu=True</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -683,7 +692,8 @@ also provide additional regularization.</p>
     <span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span>
 <span class="p">}</span>
 <span class="n">estimator</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">Falkon</span><span class="p">(</span>
-    <span class="n">kernel</span><span class="o">=</span><span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">penalty</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">kernel</span><span class="o">=</span><span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">penalty</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="n">falkon</span><span class="o">.</span><span class="n">FalkonOptions</span><span class="p">(</span><span class="n">use_cpu</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
 <span class="n">grid_search</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">parameter_grid</span><span class="p">,</span> <span class="n">mclass_scorer</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>falkon.sparse &mdash; falkon 0.5.0 documentation</title>
+  <title>falkon.options &mdash; falkon 0.5.0 documentation</title>
   
 
   
@@ -39,7 +39,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="falkon.ooc_ops" href="outofcore.html" /> 
+    <link rel="next" title="falkon.gsc_losses" href="gsc_losses.html" />
+    <link rel="prev" title="falkon.kernels" href="kernels.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -164,8 +165,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">falkon.options</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="options.html#falkonoptions">FalkonOptions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">falkon.options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#falkonoptions">FalkonOptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gsc_losses.html">falkon.gsc_losses</a><ul>
@@ -196,9 +197,9 @@
 <li class="toctree-l3"><a class="reference internal" href="outofcore.html#gpu-lauum">gpu_lauum</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">falkon.sparse</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#sparsetensor">SparseTensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sparse-operations">Sparse operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sparse.html">falkon.sparse</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sparse.html#sparsetensor">SparseTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sparse.html#sparse-operations">Sparse operations</a></li>
 </ul>
 </li>
 </ul>
@@ -251,13 +252,13 @@
         
           <li><a href="index.html">API Reference</a> &raquo;</li>
         
-      <li>falkon.sparse</li>
+      <li>falkon.options</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api_reference/sparse.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api_reference/options.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -294,103 +295,88 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-falkon.sparse">
-<span id="falkon-sparse"></span><h1>falkon.sparse<a class="headerlink" href="#module-falkon.sparse" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="sparsetensor">
-<h2>SparseTensor<a class="headerlink" href="#sparsetensor" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-falkon.options">
+<span id="falkon-options"></span><span id="api-options"></span><h1>falkon.options<a class="headerlink" href="#module-falkon.options" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="falkonoptions">
+<h2>FalkonOptions<a class="headerlink" href="#falkonoptions" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="falkon.sparse.SparseTensor">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">SparseTensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">indexptr</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>int<span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">sparse_type</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>falkon.sparse.sparse_tensor.SparseType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">csr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.sparse.SparseTensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to represent sparse 2D matrices</p>
-<p><cite>SparseTensor</cite> can hold the data in CSR or CSC format, which represent the data with three
-1-dimensional arrays.
-It supports some of the common torch tensor management functions (e.g. <cite>pin_memory</cite>, <cite>device</cite>,
-<cite>size</cite>) and conversion to and from the corresponding scipy sparse matrix representation.
-It does <strong>not</strong> define any mathematical function on sparse matrices, which are
-instead defined in the <cite>sparse_ops.py</cite> file.</p>
+<dt id="falkon.options.FalkonOptions">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.options.</code><code class="sig-name descname">FalkonOptions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keops_acc_dtype</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">keops_sum_scheme</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">no_keops</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_force_in_core</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_force_ooc</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_par_blk_multiplier</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">lauum_par_blk_multiplier</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">8</span></em>, <em class="sig-param"><span class="n">pc_epsilon_32</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">pc_epsilon_64</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-13</span></em>, <em class="sig-param"><span class="n">cpu_preconditioner</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cg_epsilon_32</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">cg_epsilon_64</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-15</span></em>, <em class="sig-param"><span class="n">cg_tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">cg_full_gradient_every</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">debug</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_cpu</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_gpu_mem</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">max_cpu_mem</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">compute_arch_speed</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">no_single_kernel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.options.FalkonOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Global options for Falkon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>indexptr</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Array of row (or column for CSC data) pointers into the
-<cite>index</cite> and <cite>data</cite> arrays. Should be either of type long or int.</p>
+<dt><strong>debug (default False)</strong></dt><dd><p>When set to <cite>True</cite>, the estimators will print extensive debugging information.
+Set it if you want to dig deeper.</p>
 </dd>
-<dt><strong>index</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Array of column (or row for CSC data) indices for non-zero elements.
-Should be either of type long or int.</p>
+<dt><strong>use_cpu (default False)</strong></dt><dd><p>When set to <cite>True</cite> forces Falkon not to use the GPU. If this option is not set,
+and no GPU is available, Falkon will issue a warning.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Array of the non-zero elements for the sparse matrix.</p>
+<dt><strong>max_gpu_mem</strong></dt><dd><p>The maximum GPU memory (in bytes) that Falkon may use. If not set, Falkon will
+use all available memory.</p>
 </dd>
-<dt><strong>size</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>Shape of the 2D tensor (rows, columns).</p>
+<dt><strong>max_cpu_mem</strong></dt><dd><p>The maximum CPU RAM (in bytes) that Falkon may use. If not set, Falkon will
+use all available memory. This option is not a strict bound (due to the nature
+of memory management in Python).</p>
 </dd>
-<dt><strong>sparse_type: str or SparseType</strong></dt><dd><p>Whether the matrix should be interpreted as CSR or CSC format.</p>
+<dt><strong>compute_arch_speed (default False)</strong></dt><dd><p>When running Falkon on a machine with multiple GPUs which have a range of different
+performance characteristics, setting this option to <cite>True</cite> may help subdivide the
+workload better: the performance of each accelerator will be evaluated on startup,
+then the faster devices will receive more work than the slower ones.
+If this is not the case, do not set this option since evaluating accelerator performance
+increases startup times.</p>
+</dd>
+<dt><strong>no_single_kernel (default True)</strong></dt><dd><p>Whether the kernel should always be evaluated in double precision.
+If set to <cite>False</cite>, kernel evaluations will be faster but less precise (note that this
+referes only to calculations involving the full kernel matrix, not to kernel-vector
+products).</p>
+</dd>
+<dt><strong>keops_acc_dtype (default “auto”)</strong></dt><dd><p>A string describing the accumulator data-type for KeOps.
+For more information refer to the
+<a class="reference external" href="https://www.kernel-operations.io/keops/python/api/pytorch/Genred_torch.html?highlight=genred#pykeops.torch.Genred">KeOps documentation</a></p>
+</dd>
+<dt><strong>keops_sum_scheme (default “auto”)</strong></dt><dd><p>Accumulation scheme for KeOps. For more information refer to the
+<a class="reference external" href="https://www.kernel-operations.io/keops/python/api/pytorch/Genred_torch.html?highlight=genred#pykeops.torch.Genred">KeOps documentation</a></p>
+</dd>
+<dt><strong>no_keops</strong><span class="classifier">(default False)</span></dt><dd><p>When set to <cite>True</cite> KeOps will not be used.</p>
+</dd>
+<dt><strong>cg_epsilon_32 (default 1e-7)</strong></dt><dd><p>Small added epsilon to prevent divide-by-zero errors in the conjugate gradient algorithm. 
+Used for single precision data-types</p>
+</dd>
+<dt><strong>cg_epsilon_64 (default 1e-15)</strong></dt><dd><p>Small added epsilon to prevent divide-by-zero errors in the conjugate gradient algorithm. 
+Used for double precision data-types</p>
+</dd>
+<dt><strong>cg_tolerance</strong></dt><dd><p>Maximum change in model parameters between iterations. If less change than <cite>cg_tolerance</cite>
+is detected, then we regard the optimization as converged.</p>
+</dd>
+<dt><strong>cg_full_gradient_every</strong></dt><dd><p>How often to calculate the full gradient in the conjugate gradient algorithm. Full-gradient
+iterations take roughly twice the time as normal iterations, but they reset the error
+introduced by the other iterations.</p>
+</dd>
+<dt><strong>pc_epsilon_32</strong></dt><dd><p>Epsilon used to increase the diagonal dominance of a matrix before its
+Cholesky decomposition (for single-precision data types).</p>
+</dd>
+<dt><strong>pc_epsilon_64</strong></dt><dd><p>Epsilon used to increase the diagonal dominance of a matrix before its
+Cholesky decomposition (for double-precision data types).</p>
+</dd>
+<dt><strong>cpu_preconditioner</strong></dt><dd><p>Whether the preconditioner should be computed on the CPU. This setting overrides
+the <code class="xref py py-attr docutils literal notranslate"><span class="pre">FalkonOptions.use_cpu</span></code> option.</p>
+</dd>
+<dt><strong>lauum_par_blk_multiplier</strong></dt><dd><p>Minimum number of tiles per-GPU for the LAUUM algorithm. This can be set quite high (e.g. 8)
+too much performance degradation. Optimal settings will depend on the number of GPUs.</p>
+</dd>
+<dt><strong>chol_force_in_core</strong></dt><dd><p>Whether to force in-core execution of the Cholesky decomposition. This will
+not work with matrices bigger than GPU memory.</p>
+</dd>
+<dt><strong>chol_force_ooc</strong></dt><dd><p>Whether to force out-of-core (parallel) execution for the POTRF algorithm, 
+even on matrices which fit in-GPU-core.</p>
+</dd>
+<dt><strong>chol_par_blk_multiplier</strong></dt><dd><p>Minimum number of tiles per-GPU in the out-of-core, GPU-parallel POTRF algorithm.</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="falkon.sparse.SparseTensor.narrow_rows">
-<code class="sig-name descname">narrow_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>int<span class="p">, </span>NoneType<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>int<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; ’SparseTensor’<a class="headerlink" href="#falkon.sparse.SparseTensor.narrow_rows" title="Permalink to this definition">¶</a></dt>
-<dd><p>Select a subset of contiguous rows from the sparse matrix.
-If this is a CSC sparse matrix, instead of taking contiguous rows we take contiguous
-columns.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>start: int or None</strong></dt><dd><p>The index of the first row to select. If None will be assumed to be 0.</p>
-</dd>
-<dt><strong>length: int or None</strong></dt><dd><p>The number of rows to select. If None will be assumed to be all rows after <cite>start</cite>.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>SparseTensor</dt><dd><p>A new <cite>SparseTensor</cite> object with <cite>length</cite> rows.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The output matrix will share storage with the original matrix whenever possible.</p>
 </dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="falkon.sparse.SparseType">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">SparseType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.sparse.SparseType" title="Permalink to this definition">¶</a></dt>
-<dd><p>An enumeration.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="sparse-operations">
-<h2>Sparse operations<a class="headerlink" href="#sparse-operations" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="falkon.sparse.sparse_matmul">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_matmul</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_matmul" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sparse*Sparse matrix multiplication. Output will be copied into dense <cite>out</cite> matrix.</p>
-<p>This function can be applied to CPU or CUDA tensors (but all tensors must
-be consistently on the same device). Note that the CUDA matrix multiplication
-is</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>A</strong><span class="classifier">SparseTensor</span></dt><dd><p>N x D, sparse matrix.</p>
-</dd>
-<dt><strong>B</strong><span class="classifier">SparseTensor</span></dt><dd><p>D x M, sparse matrix</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="falkon.sparse.sparse_square_norm">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_square_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_square_norm" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="falkon.sparse.sparse_norm">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_norm" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </div>
 </div>
@@ -403,8 +389,10 @@ is</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="gsc_losses.html" class="btn btn-neutral float-right" title="falkon.gsc_losses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="outofcore.html" class="btn btn-neutral float-left" title="falkon.ooc_ops" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="kernels.html" class="btn btn-neutral float-left" title="falkon.kernels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

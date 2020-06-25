@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="falkon.gsc_losses" href="gsc_losses.html" />
+    <link rel="next" title="falkon.options" href="options.html" />
     <link rel="prev" title="falkon.models" href="models.html" /> 
 </head>
 
@@ -102,7 +102,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../install.html#testing-the-installation">Testing the installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../get_started.html#passing-options">Passing Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../get_started.html#more-examples">More Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/simple_regression.html">Falkon Regression Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../examples/simple_regression.html#Introduction">Introduction</a></li>
@@ -159,6 +163,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#linear-kernel">Linear kernel</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">falkon.options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="options.html#falkonoptions">FalkonOptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="gsc_losses.html">falkon.gsc_losses</a><ul>
@@ -293,16 +301,16 @@
 <h2>Kernel<a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="falkon.kernels.Kernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">Kernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">kernel_type</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.FalkonOptions<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">Kernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">kernel_type</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="falkon.kernels.Kernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="falkon.kernels.Kernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">kernel_type</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">kernel_type</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -327,7 +335,7 @@
 <h3>Gaussian kernel<a class="headerlink" href="#gaussian-kernel" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="falkon.kernels.GaussianKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">GaussianKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>float<span class="p">, </span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.FalkonOptions<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">GaussianKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>float<span class="p">, </span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for computing the Gaussian kernel and related kernel-vector products</p>
 <p>The Gaussian kernel is one of the most common and effective kernel embeddings
 since it is infinite dimensional, and governed by a single parameter. The kernel length-scale
@@ -387,13 +395,13 @@ use KeOps.</p>
 </div>
 <dl class="py method">
 <dt id="falkon.kernels.GaussianKernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="falkon.kernels.GaussianKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>float<span class="p">, </span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>float<span class="p">, </span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -440,7 +448,7 @@ in the parameter <cite>sigma</cite>.</p>
 \[k(x, x') = \exp{-\frac{\lVert x - x' \rVert}{\sigma}}\]</div>
 <dl class="py method">
 <dt id="falkon.kernels.LaplacianKernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 </dd></dl>
 
@@ -478,16 +486,16 @@ in the parameter <cite>sigma</cite>.</p>
 <h3>Exponential kernel<a class="headerlink" href="#exponential-kernel" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="falkon.kernels.ExponentialKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">ExponentialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.FalkonOptions<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">ExponentialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="falkon.kernels.ExponentialKernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="falkon.kernels.ExponentialKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -516,16 +524,16 @@ in the parameter <cite>sigma</cite>.</p>
 <h3>Polynomial kernel<a class="headerlink" href="#polynomial-kernel" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="falkon.kernels.PolynomialKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">PolynomialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">degree</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.FalkonOptions<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">PolynomialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">degree</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
 <dt id="falkon.kernels.PolynomialKernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="falkon.kernels.PolynomialKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">degree</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">degree</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -554,7 +562,7 @@ in the parameter <cite>sigma</cite>.</p>
 <h3>Linear kernel<a class="headerlink" href="#linear-kernel" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="falkon.kernels.LinearKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">LinearKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.FalkonOptions<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">LinearKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Linear Kernel with optional scaling and translation parameters.</p>
 <p>The kernel implemented here is the covariance function in the original
 input space (i.e. <cite>X &#64; X.T</cite>) with optional parameters to translate
@@ -574,13 +582,13 @@ be multiplied by the inverse of sigma squared.</p>
 </dl>
 <dl class="py method">
 <dt id="falkon.kernels.LinearKernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call self as a function.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="falkon.kernels.LinearKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>falkon.options.FalkonOptions<span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Union<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">, </span>NoneType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -616,7 +624,7 @@ be multiplied by the inverse of sigma squared.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="gsc_losses.html" class="btn btn-neutral float-right" title="falkon.gsc_losses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="options.html" class="btn btn-neutral float-right" title="falkon.options" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="models.html" class="btn btn-neutral float-left" title="falkon.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -102,7 +102,11 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#testing-the-installation">Testing the installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#passing-options">Passing Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#more-examples">More Examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/simple_regression.html">Falkon Regression Tutorial</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="examples/simple_regression.html#Introduction">Introduction</a></li>
@@ -159,6 +163,10 @@
 <li class="toctree-l4"><a class="reference internal" href="api_reference/kernels.html#linear-kernel">Linear kernel</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/options.html">falkon.options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api_reference/options.html#falkonoptions">FalkonOptions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference/gsc_losses.html">falkon.gsc_losses</a><ul>
@@ -307,7 +315,28 @@ few lines of code:</p>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="section" id="passing-options">
+<h2>Passing Options<a class="headerlink" href="#passing-options" title="Permalink to this headline">¶</a></h2>
+<p>A number of different options exist for both the <cite>Falkon</cite> and <cite>LogisticFalkon</cite> estimators (see <a class="reference internal" href="api_reference/options.html#api-options"><span class="std std-ref">falkon.Options</span></a>).
+All options can be passed to the estimator through the <cite>FalkonOptions</cite> class, like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">falkon</span> <span class="kn">import</span> <span class="n">FalkonOptions</span><span class="p">,</span> <span class="n">Falkon</span><span class="p">,</span> <span class="n">kernels</span>
+
+<span class="c1"># Options to: increase the amount of output information; avoid using the KeOps library</span>
+<span class="n">options</span> <span class="o">=</span> <span class="n">FalkonOptions</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">no_keops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Falkon</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span>
+               <span class="n">penalty</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+               <span class="n">M</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+               <span class="n">maxiter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>   <span class="c1"># Set the maximum number of conjugate gradient iterations to 10</span>
+               <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="more-examples">
+<h2>More Examples<a class="headerlink" href="#more-examples" title="Permalink to this headline">¶</a></h2>
 <p>For more detailed examples, have a look at the <a class="reference internal" href="examples/examples.html#examples"><span class="std std-ref">example notebooks</span></a>.</p>
+</div>
 </div>
 
 
