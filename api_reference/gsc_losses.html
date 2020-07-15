@@ -334,14 +334,14 @@ products.</p>
 </div>
 <dl class="py method">
 <dt id="falkon.gsc_losses.Loss.knmp_grad">
-<code class="sig-name descname">knmp_grad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Xc</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">opt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.Loss.knmp_grad" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">knmp_grad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Xc</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">opt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.Loss.knmp_grad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate (1/n)* K(Xc, X) &#64; df(Y, K(X, Xc) &#64; u)</p>
 <p>And return also K(X, Xc) &#64; u</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="falkon.gsc_losses.Loss.knmp_hess">
-<code class="sig-name descname">knmp_hess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Xc</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">opt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.Loss.knmp_hess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">knmp_hess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Xc</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">u</span></em>, <em class="sig-param"><span class="n">opt</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.gsc_losses.Loss.knmp_hess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a kernel-vector product with a rescaling with the second derivative</p>
 <p>Given kernel function <span class="math notranslate nohighlight">\(K\)</span>, the loss represented by this class <span class="math notranslate nohighlight">\(\mathcal{l}\)</span>,
 number of samples <span class="math notranslate nohighlight">\(n\)</span>, this function follows equation</p>
@@ -394,7 +394,7 @@ products.</p>
 </div>
 <dl class="py method">
 <dt id="falkon.gsc_losses.LogisticLoss.ddf">
-<code class="sig-name descname">ddf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">y1</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">y2</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.gsc_losses.LogisticLoss.ddf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ddf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y1</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">y2</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.gsc_losses.LogisticLoss.ddf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the second derivative of the logistic loss between two vectors</p>
 <p>The formula used is</p>
 <p>..math:</p>
@@ -421,7 +421,7 @@ products.</p>
 
 <dl class="py method">
 <dt id="falkon.gsc_losses.LogisticLoss.df">
-<code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">y1</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">y2</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.gsc_losses.LogisticLoss.df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y1</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">y2</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.gsc_losses.LogisticLoss.df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the derivative of the logistic loss between two vectors</p>
 <p>The formula used is</p>
 <p>..math:</p>

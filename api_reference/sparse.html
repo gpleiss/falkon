@@ -328,7 +328,7 @@ Should be either of type long or int.</p>
 </dl>
 <dl class="py method">
 <dt id="falkon.sparse.SparseTensor.narrow_rows">
-<code class="sig-name descname">narrow_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>int<span class="p">, </span>NoneType<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>int<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; ’SparseTensor’<a class="headerlink" href="#falkon.sparse.SparseTensor.narrow_rows" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">narrow_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; falkon.sparse.sparse_tensor.SparseTensor<a class="headerlink" href="#falkon.sparse.SparseTensor.narrow_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a subset of contiguous rows from the sparse matrix.
 If this is a CSC sparse matrix, instead of taking contiguous rows we take contiguous
 columns.</p>
@@ -384,12 +384,12 @@ is</p>
 
 <dl class="py function">
 <dt id="falkon.sparse.sparse_square_norm">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_square_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_square_norm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_square_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_square_norm" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="falkon.sparse.sparse_norm">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>NoneType<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_norm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_norm" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
