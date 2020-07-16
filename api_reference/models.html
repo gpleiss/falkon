@@ -451,7 +451,7 @@ data points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>- X</strong><span class="classifier">torch.Tensor (2D)</span></dt><dd><p>Tensor of test data points, of shape [num_samples, num_dimensions].
+<dt><strong>X</strong><span class="classifier">torch.Tensor (2D)</span></dt><dd><p>Tensor of test data points, of shape [num_samples, num_dimensions].
 If X is in Fortran order (i.e. column-contiguous) then we can avoid
 an extra copy of the data.</p>
 </dd>
@@ -459,7 +459,7 @@ an extra copy of the data.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>- predictions</strong><span class="classifier">torch.Tensor (2D)</span></dt><dd><p>Prediction tensor of shape [num_samples, num_outputs] for all
+<dt><strong>predictions</strong><span class="classifier">torch.Tensor (2D)</span></dt><dd><p>Prediction tensor of shape [num_samples, num_outputs] for all
 data points.</p>
 </dd>
 </dl>

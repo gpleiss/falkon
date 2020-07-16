@@ -570,15 +570,18 @@ availability of a GPU).</p>
 <p>The preconditioner is based on the K_MM kernel between the
 inducing points. A two step approximation of the inverse matrix
 via two cholesky decompositions is performed.</p>
-<p>T = chol(K_MM)    =&gt; T.T &#64; T = K_MM
-A = chol(1/M * (T &#64; (T.T &#64; W)) + lambda)
-So T and A are both upper triangular.
-W is a diagonal matrix of weights derived from the 2nd derivative of the loss function.</p>
-<p>Here we store T in the upper triangular part of the <cite>fC</cite> matrix,
-and A in the upper triangular part of the matrix.
+<p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">T</span> <span class="pre">=</span> <span class="pre">chol(K_MM)</span>&#160;&#160;&#160; <span class="pre">=&gt;</span> <span class="pre">T.T</span> <span class="pre">&#64;</span> <span class="pre">T</span> <span class="pre">=</span> <span class="pre">K_MM</span>
+<span class="pre">A</span> <span class="pre">=</span> <span class="pre">chol(1/M</span> <span class="pre">*</span> <span class="pre">(T</span> <span class="pre">&#64;</span> <span class="pre">(T.T</span> <span class="pre">&#64;</span> <span class="pre">W))</span> <span class="pre">+</span> <span class="pre">lambda)</span>
+<span class="pre">`</span></code></p>
+<p>So <cite>T</cite> and <cite>A</cite> are both upper triangular.
+<cite>W</cite> is a diagonal matrix of weights derived from the 2nd derivative of the loss function.</p>
+<p>Here we store <cite>T</cite> in the upper triangular part of the <cite>fC</cite> matrix,
+and <cite>A</cite> in the upper triangular part of the matrix.
 Whenever we need to use one or the other we need to reset the
 diagonal of <cite>fC</cite> since it is shared between the two matrices.
-W is of size <cite>M</cite> and is the only difference from the normal FALKON preconditioner.</p>
+<cite>W</cite> is of size <cite>M</cite> and is the only difference with respect to the normal FALKON preconditioner
+(<a href="#id1"><span class="problematic" id="id2">:cls:`falkon.preconditioner.FalkonPreconditioner`</span></a>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -617,7 +620,7 @@ availability of a GPU).</p>
 <dl class="simple">
 <dt><a class="reference internal" href="gsc_losses.html#falkon.gsc_losses.LogisticLoss" title="falkon.gsc_losses.LogisticLoss"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.gsc_losses.LogisticLoss</span></code></a></dt><dd><p>for an example of loss function used for kernel reweighting.</p>
 </dd>
-<dt><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.LogisticFalkon</span></code></dt><dd><p>for the estimator which uses this preconditioner.</p>
+<dt><a class="reference internal" href="models.html#falkon.models.LogisticFalkon" title="falkon.models.LogisticFalkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.LogisticFalkon</span></code></a></dt><dd><p>for the logistic kernel estimator which uses this preconditioner.</p>
 </dd>
 </dl>
 </div>
