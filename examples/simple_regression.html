@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Falkon Regression Tutorial &mdash; falkon 0.5.0 documentation</title>
+  <title>Falkon Regression Tutorial &mdash; falkon 0.6.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -148,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/models.html">falkon.models</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api_reference/models.html#falkon">Falkon</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api_reference/models.html#logisticfalkon">LogisticFalkon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api_reference/models.html#incorefalkon">InCoreFalkon</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api_reference/kernels.html">falkon.kernels</a><ul>
@@ -657,7 +658,7 @@ Stopping conjugate gradient descent at iteration 2. Solution has converged.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Falkon(M=404, center_selection=&lt;falkon.center_selection.UniformSel object at 0x7fdf14416a10&gt;, cg_tolerance=1e-07, cholesky_opt=CholeskyOptions(chol_block_size=256, chol_tile_size=&#39;auto&#39;, chol_force_in_core=False, chol_force_ooc=False, chol_force_parallel=False, chol_par_blk_multiplier=2), compute_arch_speed=False, cpu_preconditioner=False, debug=False, error_every=1, error_fn=None, kernel=GaussianKernel(sigma=5.0), lauum_opt=LauumOptions(lauum_par_blk_multiplier=8), max_cpu_mem=inf, max_gpu_mem=inf, maxiter=20, no_keops=False, no_single_kernel=True, pc_epsilon={torch.float32: 1e-06, torch.float64: 1e-13}, penalty=0.0001, seed=None, use_cpu=True)
+Falkon(M=404, center_selection=&lt;falkon.center_selection.UniformSel object at 0x7feede906190&gt;, error_every=1, error_fn=None, kernel=GaussianKernel(sigma=5.0), maxiter=20, options=FalkonOptions(keops_acc_dtype=&#39;auto&#39;, keops_sum_scheme=&#39;auto&#39;, no_keops=False, chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True), penalty=0.0001, seed=None)
 </pre></div></div>
 </div>
 <p>Optimization converges very quickly to a minimum, where convergence is detected by checking the change model parameters between iterations.</p>

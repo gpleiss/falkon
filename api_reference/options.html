@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>falkon.options &mdash; falkon 0.5.0 documentation</title>
+  <title>falkon.options &mdash; falkon 0.6.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -148,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="models.html">falkon.models</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="models.html#falkon">Falkon</a></li>
 <li class="toctree-l3"><a class="reference internal" href="models.html#logisticfalkon">LogisticFalkon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#incorefalkon">InCoreFalkon</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="kernels.html">falkon.kernels</a><ul>
@@ -301,7 +302,7 @@
 <h2>FalkonOptions<a class="headerlink" href="#falkonoptions" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="falkon.options.FalkonOptions">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.options.</code><code class="sig-name descname">FalkonOptions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keops_acc_dtype</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">keops_sum_scheme</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">no_keops</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_force_in_core</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_force_ooc</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_par_blk_multiplier</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">lauum_par_blk_multiplier</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">8</span></em>, <em class="sig-param"><span class="n">pc_epsilon_32</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">pc_epsilon_64</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-13</span></em>, <em class="sig-param"><span class="n">cpu_preconditioner</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cg_epsilon_32</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">cg_epsilon_64</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-15</span></em>, <em class="sig-param"><span class="n">cg_tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">cg_full_gradient_every</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">debug</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_cpu</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_gpu_mem</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">max_cpu_mem</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">compute_arch_speed</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">no_single_kernel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.options.FalkonOptions" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.options.</code><code class="sig-name descname">FalkonOptions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keops_acc_dtype</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">keops_sum_scheme</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">keops_active</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'auto'</span></em>, <em class="sig-param"><span class="n">chol_force_in_core</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_force_ooc</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">chol_par_blk_multiplier</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">lauum_par_blk_multiplier</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">8</span></em>, <em class="sig-param"><span class="n">pc_epsilon_32</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">pc_epsilon_64</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-13</span></em>, <em class="sig-param"><span class="n">cpu_preconditioner</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">cg_epsilon_32</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">cg_epsilon_64</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-15</span></em>, <em class="sig-param"><span class="n">cg_tolerance</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-07</span></em>, <em class="sig-param"><span class="n">cg_full_gradient_every</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">debug</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_cpu</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_gpu_mem</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">max_cpu_mem</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em>, <em class="sig-param"><span class="n">compute_arch_speed</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">no_single_kernel</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">min_cuda_pc_size_32</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">min_cuda_pc_size_64</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">30000</span></em>, <em class="sig-param"><span class="n">min_cuda_iter_size_32</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">300000000</span></em>, <em class="sig-param"><span class="n">min_cuda_iter_size_64</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">900000000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.options.FalkonOptions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Global options for Falkon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -331,6 +332,40 @@ If set to <cite>False</cite>, kernel evaluations will be faster but less precise
 referes only to calculations involving the full kernel matrix, not to kernel-vector
 products).</p>
 </dd>
+<dt><strong>min_cuda_pc_size_32 (default 10000)</strong></dt><dd><p>If M (the number of Nystroem centers) is lower than <cite>min_cuda_pc_size_32</cite>, falkon will
+run the preconditioner on the CPU. Otherwise, if CUDA is available, falkon will try
+to run the preconditioner on the GPU. This setting is valid for data in single
+(float32) precision.
+Along with the <cite>min_cuda_iter_size_32</cite> setting, this determines a cutoff for running
+Falkon on the CPU or the GPU. Such cutoff is useful since for small-data problems
+running on the CPU may be faster than running on the GPU. If your data is close to the
+cutoff, it may be worth experimenting with running on the CPU and on the GPU to check
+which side is faster. This will depend on the exact hardware.</p>
+</dd>
+<dt><strong>min_cuda_pc_size_64 (default 30000)</strong></dt><dd><p>If M (the number of Nystroem centers) is lower than <cite>min_cuda_pc_size_64</cite>, falkon will
+run the preconditioner on the CPU. Otherwise, if CUDA is available, falkon will try
+to run the preconditioner on the GPU. This setting is valid for data in double
+(float64) precision.
+Along with the <cite>min_cuda_iter_size_64</cite> setting, this determines a cutoff for running
+Falkon on the CPU or the GPU. Such cutoff is useful since for small-data problems
+running on the CPU may be faster than running on the GPU. If your data is close to the
+cutoff, it may be worth experimenting with running on the CPU and on the GPU to check
+which side is faster. This will depend on the exact hardware.</p>
+</dd>
+<dt><strong>min_cuda_iter_size_32 (default 300_000_000)</strong></dt><dd><p>If the data size (measured as the product of M, and the dimensions of X) is lower than
+<cite>min_cuda_iter_size_32</cite>, falkon will run the conjugate gradient iterations on the CPU.
+For example, with the default setting, the CPU-GPU threshold is set at a dataset
+with 10k points, 10 dimensions, and 3k Nystroem centers. A larger dataset, or the use
+of more centers, will cause the conjugate gradient iterations to run on the GPU.
+This setting is valid for data in single (float32) precision.</p>
+</dd>
+<dt><strong>min_cuda_iter_size_64 (default 900_000_000)</strong></dt><dd><p>If the data size (measured as the product of M, and the dimensions of X) is lower than
+<cite>min_cuda_iter_size_64</cite>, falkon will run the conjugate gradient iterations on the CPU.
+For example, with the default setting, the CPU-GPU threshold is set at a dataset
+with 30k points, 10 dimensions, and 3k Nystroem centers. A larger dataset, or the use
+of more centers, will cause the conjugate gradient iterations to run on the GPU.
+This setting is valid for data in double (float64) precision.</p>
+</dd>
 <dt><strong>keops_acc_dtype (default “auto”)</strong></dt><dd><p>A string describing the accumulator data-type for KeOps.
 For more information refer to the
 <a class="reference external" href="https://www.kernel-operations.io/keops/python/api/pytorch/Genred_torch.html?highlight=genred#pykeops.torch.Genred">KeOps documentation</a></p>
@@ -338,7 +373,10 @@ For more information refer to the
 <dt><strong>keops_sum_scheme (default “auto”)</strong></dt><dd><p>Accumulation scheme for KeOps. For more information refer to the
 <a class="reference external" href="https://www.kernel-operations.io/keops/python/api/pytorch/Genred_torch.html?highlight=genred#pykeops.torch.Genred">KeOps documentation</a></p>
 </dd>
-<dt><strong>no_keops</strong><span class="classifier">(default False)</span></dt><dd><p>When set to <cite>True</cite> KeOps will not be used.</p>
+<dt><strong>keops_active</strong><span class="classifier">(default “auto”)</span></dt><dd><p>Whether to use or not to use KeOps. Three settings are allowed, specified by strings:
+‘auto’ (the default setting) means that KeOps will be used if it is installed correctly,
+‘no’ means keops will not be used, nor will it be imported, and ‘force’ means that if KeOps is
+not installed an error will be raised.</p>
 </dd>
 <dt><strong>cg_epsilon_32 (default 1e-7)</strong></dt><dd><p>Small added epsilon to prevent divide-by-zero errors in the conjugate gradient algorithm.
 Used for single precision data-types</p>

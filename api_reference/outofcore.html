@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>falkon.ooc_ops &mdash; falkon 0.5.0 documentation</title>
+  <title>falkon.ooc_ops &mdash; falkon 0.6.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -148,6 +148,7 @@
 <li class="toctree-l2"><a class="reference internal" href="models.html">falkon.models</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="models.html#falkon">Falkon</a></li>
 <li class="toctree-l3"><a class="reference internal" href="models.html#logisticfalkon">LogisticFalkon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#incorefalkon">InCoreFalkon</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="kernels.html">falkon.kernels</a><ul>
@@ -295,9 +296,18 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-falkon.ooc_ops">
-<span id="falkon-ooc-ops"></span><h1>falkon.ooc_ops<a class="headerlink" href="#module-falkon.ooc_ops" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="gpu-cholesky">
+<div class="section" id="falkon-ooc-ops">
+<h1>falkon.ooc_ops<a class="headerlink" href="#falkon-ooc-ops" title="Permalink to this headline">¶</a></h1>
+<p>The out-of-core algorithms for the Cholesky decomposition and the LAUUM operation are crucial for speeding up our
+library. To find out more about how they work, check the source code:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/FalkonML/falkon/blob/master/falkon/ooc_ops/multigpu/cuda/multigpu_potrf.cu">Out of core Cholesky</a> (CUDA code)</p></li>
+<li><p><a class="reference external" href="https://github.com/FalkonML/falkon/blob/master/falkon/ooc_ops/parallel_lauumm.py">Out of core LAUUM</a> (Python code)</p></li>
+</ul>
+</div></blockquote>
+<p>The following functions provide a higher-level interface to the two operations.</p>
+<span class="target" id="module-falkon.ooc_ops"></span><div class="section" id="gpu-cholesky">
 <h2>gpu_cholesky<a class="headerlink" href="#gpu-cholesky" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="falkon.ooc_ops.gpu_cholesky">
@@ -336,7 +346,7 @@ in case A is not Fortran contiguous to begin with.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>A</strong><span class="classifier">ndarray [N, N]</span></dt><dd><p>2D positive-definite matrix that will be factorized as
+<dt><strong>A</strong><span class="classifier">torch.Tensor [N, N]</span></dt><dd><p>2D positive-definite matrix that will be factorized as
 A = U.T &#64; U (if <cite>upper</cite> is True) or A = L &#64; L.T if <cite>upper</cite>
 is False.</p>
 </dd>
@@ -346,10 +356,6 @@ buffer.</p>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The factorization will always be the ‘lower’ version of the factorization
-which could however end up on the upper-triangular part of the matrix
-in case A is not Fortran contiguous to begin with.</p>
 </dd></dl>
 
 </div>
