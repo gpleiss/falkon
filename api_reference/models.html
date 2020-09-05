@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>falkon.models &mdash; falkon 0.6.0 documentation</title>
+  <title>falkon.models &mdash; falkon 0.6.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.6.0
+                0.6.1
               </div>
             
           
@@ -422,7 +422,138 @@ extra copy of the data.</p>
 <dl class="py class">
 <dt id="falkon.models.LogisticFalkon">
 <em class="property">class </em><code class="sig-prename descclassname">falkon.models.</code><code class="sig-name descname">LogisticFalkon</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">falkon.kernels.kernel.Kernel</span></em>, <em class="sig-param"><span class="n">penalty_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">iter_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">loss</span><span class="p">:</span> <span class="n"><a class="reference internal" href="gsc_losses.html#falkon.gsc_losses.Loss" title="falkon.gsc_losses.Loss">falkon.gsc_losses.Loss</a></span></em>, <em class="sig-param"><span class="n">M</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">center_selection</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>falkon.center_selection.CenterSelector<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'uniform'</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error_fn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error_every</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">FalkonOptions(keops_acc_dtype='auto', keops_sum_scheme='auto', keops_active='auto', chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True, min_cuda_pc_size_32=10000, min_cuda_pc_size_64=30000, min_cuda_iter_size_32=300000000, min_cuda_iter_size_64=900000000)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.models.LogisticFalkon" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Falkon Logistic regression solver.</p>
+<p>This estimator object solves approximate logistic regression problems with Nystroem
+projections and a fast optimization algorithm as described in <a class="reference internal" href="#r39b93b60d7f4-1" id="id5">[1]</a>, <a class="reference internal" href="#r39b93b60d7f4-2" id="id6">[2]</a>.</p>
+<p>This model can handle logistic regression, so it may be used in place of
+<a class="reference internal" href="#falkon.models.Falkon" title="falkon.models.Falkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.Falkon</span></code></a> (which uses the squared loss) when tackling binary
+classification problems.</p>
+<p>The algorithm works by repeated applications of the base falkon algorithm with decreasing
+amounts of regularization; therefore the class accepts slightly different parameters from
+<a class="reference internal" href="#falkon.models.Falkon" title="falkon.models.Falkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.Falkon</span></code></a>: a <cite>penalty_list</cite> which should contain a list of decreasing
+regularization amounts, and an <cite>iter_list</cite> which should specify for each application
+of the base algorithm, how many CG iterations to use. For guidance on how to set these
+parameters, see below.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>kernel</strong></dt><dd><p>Object representing the kernel function used for KRR.</p>
+</dd>
+<dt><strong>penalty_list</strong><span class="classifier">List[float]</span></dt><dd><p>Amount of regularization to use for each iteration of the base algorithm. The length
+of this list determines the number of base algorithm iterations.</p>
+</dd>
+<dt><strong>iter_list: List[int]</strong></dt><dd><p>Number of conjugate gradient iterations used in each iteration of the base algorithm.
+The length of this list must be identical to that of <cite>penalty_list</cite>.</p>
+</dd>
+<dt><strong>loss: Loss</strong></dt><dd><p>This parameter must be set to an instance of <a class="reference internal" href="gsc_losses.html#falkon.gsc_losses.LogisticLoss" title="falkon.gsc_losses.LogisticLoss"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.gsc_losses.LogisticLoss</span></code></a>,
+initialized with the same kernel as this class.</p>
+</dd>
+<dt><strong>M</strong><span class="classifier">int</span></dt><dd><p>The number of Nystrom centers to pick. <cite>M</cite> must be positive,
+and lower than the total number of training points. A larger
+<cite>M</cite> will typically lead to better accuracy but will use more
+computational resources.</p>
+</dd>
+<dt><strong>center_selection</strong><span class="classifier">str or falkon.center_selection.CenterSelector</span></dt><dd><p>The center selection algorithm. Implemented is only ‘uniform’
+selection which can choose each training sample with the same
+probability.</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">int or None</span></dt><dd><p>Random seed. Can be used to make results stable across runs.
+Randomness is present in the center selection algorithm, and in
+certain optimizers.</p>
+</dd>
+<dt><strong>error_fn</strong><span class="classifier">callable or None</span></dt><dd><p>A function which can be called with targets and predictions as
+arguments and returns the error of the predictions. This is used
+to display the evolution of the error during the iterations.</p>
+</dd>
+<dt><strong>error_every</strong><span class="classifier">int or None</span></dt><dd><p>Evaluate the error (on training or validation data) every
+<cite>error_every</cite> iterations. If set to 1 then the error will be
+calculated at each iteration. If set to None, it will never be
+calculated.</p>
+</dd>
+<dt><strong>options</strong><span class="classifier">FalkonOptions</span></dt><dd><p>Additional options used by the components of the Falkon solver. Individual options
+are documented in <a class="reference internal" href="options.html#module-falkon.options" title="falkon.options"><code class="xref py py-mod docutils literal notranslate"><span class="pre">falkon.options</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>A rule of thumb for setting the <cite>penalty_list</cite> is to keep in mind the desired final
+regularization (1e-6 in the example above), and then create a short path of around three
+iterations where the regularization is decreased down to the desired value. The decrease can
+be of 10^2 or 10^3 at each step. Then a certain number of iterations at the desired
+regularization may be necessary to achieve good performance.
+The <cite>iter_list</cite> attribute  follows a similar reasoning: use 3 inner-steps for the first three
+iterations where the regularization is decreased, and then switch to a higher number of
+inner-steps (e.g. 8) for the remaining iterations.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r39b93b60d7f4-1"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dd><p>Ulysse Marteau-Ferey, Francis Bach, Alessandro Rudi, “Globally Convergent Newton Methods
+for Ill-conditioned Generalized Self-concordant Losses,” NeurIPS 32, 2019.</p>
+</dd>
+<dt class="label" id="r39b93b60d7f4-2"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dd><p>Giacomo Meanti, Luigi Carratino, Lorenzo Rosasco, Alessandro Rudi,
+“Kernel methods through the roof: handling billions of points efficiently,”
+arXiv:2006.10350, 2020.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Running Logistic Falkon on a random dataset</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span><span class="p">[</span><span class="n">Y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span><span class="p">[</span><span class="n">Y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">options</span> <span class="o">=</span> <span class="n">FalkonOptions</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticFalkon</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">penalty_list</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>                       <span class="n">iter_list</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">M</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preds</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="falkon.models.LogisticFalkon.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">Xts</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">Yts</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.models.LogisticFalkon.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the Falkon Kernel Logistic Regression model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">torch.Tensor (2D)</span></dt><dd><p>The tensor of training data, of shape [num_samples, num_dimensions].
+If X is in Fortran order (i.e. column-contiguous) then we can avoid
+an extra copy of the data.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">torch.Tensor (1D or 2D)</span></dt><dd><p>The tensor of training targets, of shape [num_samples, num_outputs].
+If X and Y represent a classification problem, Y can be encoded as a one-hot
+vector.
+If Y is in Fortran order (i.e. column-contiguous) then we can avoid an
+extra copy of the data.</p>
+</dd>
+<dt><strong>Xts</strong><span class="classifier">torch.Tensor (2D) or None</span></dt><dd><p>Tensor of validation data, of shape [num_test_samples, num_dimensions].
+If validation data is provided and <cite>error_fn</cite> was specified when
+creating the model, they will be used to print the validation error
+during the optimization iterations.
+If Xts is in Fortran order (i.e. column-contiguous) then we can avoid an
+extra copy of the data.</p>
+</dd>
+<dt><strong>Yts</strong><span class="classifier">torch.Tensor (1D or 2D) or None</span></dt><dd><p>Tensor of validation targets, of shape [num_test_samples, num_outputs].
+If validation data is provided and <cite>error_fn</cite> was specified when
+creating the model, they will be used to print the validation error
+during the optimization iterations.
+If Yts is in Fortran order (i.e. column-contiguous) then we can avoid an
+extra copy of the data.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>model: LogisticFalkon</dt><dd><p>The fitted model</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 <div class="section" id="incorefalkon">
@@ -432,7 +563,7 @@ extra copy of the data.</p>
 <em class="property">class </em><code class="sig-prename descclassname">falkon.models.</code><code class="sig-name descname">InCoreFalkon</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">falkon.kernels.kernel.Kernel</span></em>, <em class="sig-param"><span class="n">penalty</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">M</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">center_selection</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>falkon.center_selection.CenterSelector<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'uniform'</span></em>, <em class="sig-param"><span class="n">maxiter</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">20</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error_fn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>callable<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">error_every</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">FalkonOptions(keops_acc_dtype='auto', keops_sum_scheme='auto', keops_active='auto', chol_force_in_core=False, chol_force_ooc=False, chol_par_blk_multiplier=2, lauum_par_blk_multiplier=8, pc_epsilon_32=1e-05, pc_epsilon_64=1e-13, cpu_preconditioner=False, cg_epsilon_32=1e-07, cg_epsilon_64=1e-15, cg_tolerance=1e-07, cg_full_gradient_every=10, debug=False, use_cpu=False, max_gpu_mem=inf, max_cpu_mem=inf, compute_arch_speed=False, no_single_kernel=True, min_cuda_pc_size_32=10000, min_cuda_pc_size_64=30000, min_cuda_iter_size_32=300000000, min_cuda_iter_size_64=900000000)</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.models.InCoreFalkon" title="Permalink to this definition">¶</a></dt>
 <dd><p>In GPU core Falkon Kernel Ridge Regression solver.</p>
 <p>This estimator object solves approximate kernel ridge regression problems with Nystroem
-projections and a fast optimization algorithm as described in <a class="reference internal" href="#re390d6da2a0b-1" id="id5">[1]</a>, <a class="reference internal" href="#re390d6da2a0b-2" id="id6">[2]</a>.</p>
+projections and a fast optimization algorithm as described in <a class="reference internal" href="#re390d6da2a0b-1" id="id9">[1]</a>, <a class="reference internal" href="#re390d6da2a0b-2" id="id10">[2]</a>.</p>
 <p>Multiclass and multiple regression problems can all be tackled
 with this same object, for example by encoding multiple classes
 in a one-hot target matrix.</p>
@@ -490,11 +621,11 @@ are documented in <a class="reference internal" href="options.html#module-falkon
 </dl>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="re390d6da2a0b-1"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
+<dt class="label" id="re390d6da2a0b-1"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
 <dd><p>Alessandro Rudi, Luigi Carratino, Lorenzo Rosasco, “FALKON: An optimal large
 scale kernel method,” Advances in Neural Information Processing Systems 29, 2017.</p>
 </dd>
-<dt class="label" id="re390d6da2a0b-2"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dt class="label" id="re390d6da2a0b-2"><span class="brackets"><a class="fn-backref" href="#id10">2</a></span></dt>
 <dd><p>Giacomo Meanti, Luigi Carratino, Lorenzo Rosasco, Alessandro Rudi,
 “Kernel methods through the roof: handling billions of points efficiently,”
 arXiv:2006.10350, 2020.</p>
