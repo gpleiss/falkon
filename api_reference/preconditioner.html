@@ -159,9 +159,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="kernels.html#dot-product-kernels">Dot-Product kernels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="kernels.html#exponential-kernel">Exponential kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="kernels.html#polynomial-kernel">Polynomial kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="kernels.html#linear-kernel">Linear kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kernels.html#sigmoid-kernel">Sigmoid kernel</a></li>
 </ul>
 </li>
 </ul>
@@ -198,9 +198,33 @@
 <li class="toctree-l3"><a class="reference internal" href="outofcore.html#gpu-lauum">gpu_lauum</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="mmv_ops.html">falkon.mmv_ops</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#run-keops-mmv">run_keops_mmv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cpu">fmm_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cpu-sparse">fmm_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cuda">fmm_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cuda-sparse">fmm_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cpu">fmmv_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cpu-sparse">fmmv_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cpu">fdmmv_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cpu-sparse">fdmmv_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cuda">fmmv_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cuda-sparse">fmmv_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cuda">fdmmv_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cuda-sparse">fdmmv_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#incore-fmmv">incore_fmmv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#incore-fdmmv">incore_fdmmv</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="sparse.html">falkon.sparse</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="sparse.html#sparsetensor">SparseTensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sparse.html#sparse-operations">Sparse operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="center_selector.html">falkon.center_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#centerselector">CenterSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#uniformselector">UniformSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#fixedselector">FixedSelector</a></li>
 </ul>
 </li>
 </ul>
@@ -345,16 +369,14 @@ in the lower triangle.</p>
 it is shared between the two matrices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>penalty</strong><span class="classifier">float</span></dt><dd><p>The regularization parameter for KRR. Must be greater than 0.</p>
-</dd>
-<dt><strong>kernel</strong><span class="classifier">falkon.kernel.Kernel</span></dt><dd><p>The kernel object. This is used to compute the M*M kernel
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>penalty</strong> (<em>float</em>) – The regularization parameter for KRR. Must be greater than 0.</p></li>
+<li><p><strong>kernel</strong> (<a class="reference internal" href="kernels.html#falkon.kernels.kernel.Kernel" title="falkon.kernels.kernel.Kernel"><em>falkon.kernels.kernel.Kernel</em></a>) – The kernel object. This is used to compute the M*M kernel
 between inducing points. The kernel matrix is then overwritten by
-the preconditioner itself.</p>
-</dd>
-<dt><strong>opt</strong><span class="classifier">FalkonOptions</span></dt><dd><p>Additional options to be used in computing the preconditioner.
+the preconditioner itself.</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a>) – <p>Additional options to be used in computing the preconditioner.
 Relevant options are:</p>
-<ul class="simple">
+<ul>
 <li><dl class="simple">
 <dt>pc_epsilon<span class="classifier">the jitter to add to the kernel matrix to make</span></dt><dd><p>it positive-definite and allow Cholesky decomposition.
 This can be either a float, or a dictionary mapping from
@@ -372,8 +394,8 @@ availability of a GPU).</p>
 </dl>
 </li>
 </ul>
-</dd>
-</dl>
+</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
@@ -383,16 +405,10 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -411,16 +427,10 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -434,15 +444,12 @@ availability of a GPU).</p>
 
 <dl class="py method">
 <dt id="falkon.preconditioner.FalkonPreconditioner.init">
-<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>falkon.sparse.sparse_tensor.SparseTensor<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.preconditioner.FalkonPreconditioner.init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.preconditioner.FalkonPreconditioner.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the preconditioner matrix.</p>
 <p>This method must be called before the preconditioner can be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">MxD tensor</span></dt><dd><p>The matrix of Nystroem centers</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>X</strong> (<em>torch.Tensor</em>) – The (M x D) matrix of Nystroem centers</p>
 </dd>
 </dl>
 </dd></dl>
@@ -454,22 +461,16 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">falkon.preconditioner.pc_utils.trsm()</span></code></dt><dd><p>the function used to solve the system of equations</p>
+<dt><code class="xref py py-func docutils literal notranslate"><span class="pre">trsm()</span></code></dt><dd><p>the function used to solve the system of equations</p>
 </dd>
 </dl>
 </div>
@@ -482,16 +483,10 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -510,16 +505,10 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -534,20 +523,14 @@ availability of a GPU).</p>
 <dl class="py method">
 <dt id="falkon.preconditioner.FalkonPreconditioner.invTt">
 <code class="sig-name descname">invTt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.preconditioner.FalkonPreconditioner.invTt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solve the system of equations <span class="math notranslate nohighlight">\(T^\top x = v\)</span> for unknown vector <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<dd><p>Solve the system of equations <span class="math notranslate nohighlight">\(T^\\top x = v\)</span> for unknown vector <span class="math notranslate nohighlight">\(x\)</span>.</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -585,16 +568,14 @@ diagonal of <cite>fC</cite> since it is shared between the two matrices.
 (<a class="reference internal" href="#falkon.preconditioner.FalkonPreconditioner" title="falkon.preconditioner.FalkonPreconditioner"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.preconditioner.FalkonPreconditioner</span></code></a>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>kernel</strong><span class="classifier">falkon.kernel.Kernel</span></dt><dd><p>The kernel object. This is used to compute the M*M kernel
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<a class="reference internal" href="kernels.html#falkon.kernels.kernel.Kernel" title="falkon.kernels.kernel.Kernel"><em>falkon.kernels.kernel.Kernel</em></a>) – The kernel object. This is used to compute the M*M kernel
 between inducing points. This kernel is then overwritten by
-the preconditioner itself.</p>
-</dd>
-<dt><strong>loss</strong><span class="classifier">falkon.gsc_losses.Loss</span></dt><dd><p>The loss-function used for defining kernel weights.</p>
-</dd>
-<dt><strong>opt</strong><span class="classifier">FalkonOptions</span></dt><dd><p>Additional options to be used in computing the preconditioner.
+the preconditioner itself.</p></li>
+<li><p><strong>loss</strong> (<a class="reference internal" href="gsc_losses.html#falkon.gsc_losses.Loss" title="falkon.gsc_losses.Loss"><em>falkon.gsc_losses.Loss</em></a>) – The loss-function used for defining kernel weights.</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a>) – <p>Additional options to be used in computing the preconditioner.
 Relevant options are:</p>
-<ul class="simple">
+<ul>
 <li><dl class="simple">
 <dt>pc_epsilon<span class="classifier">the jitter to add to the kernel matrix to make</span></dt><dd><p>it positive-definite and allow Cholesky decomposition.
 This can be either a float, or a dictionary mapping from
@@ -612,8 +593,8 @@ availability of a GPU).</p>
 </dl>
 </li>
 </ul>
-</dd>
-</dl>
+</p></li>
+</ul>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -632,16 +613,10 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -660,16 +635,10 @@ availability of a GPU).</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -683,24 +652,19 @@ availability of a GPU).</p>
 
 <dl class="py method">
 <dt id="falkon.preconditioner.LogisticPreconditioner.init">
-<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>falkon.sparse.sparse_tensor.SparseTensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">penalty</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#falkon.preconditioner.LogisticPreconditioner.init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">penalty</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">N</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#falkon.preconditioner.LogisticPreconditioner.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the preconditioner matrix.</p>
 <p>This method must be called before the preconditioner becomes usable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">MxD tensor</span></dt><dd><p>Matrix of Nystroem centers</p>
-</dd>
-<dt><strong>Y</strong><span class="classifier">Mx1 tensor</span></dt><dd><p>Vector of targets corresponding to the Nystroem centers <cite>X</cite></p>
-</dd>
-<dt><strong>alpha</strong><span class="classifier">Mx1 tensor</span></dt><dd><p>Parameter vector (of the same dimension as <cite>Y</cite>) which gives the current
-solution to the optimization problem.</p>
-</dd>
-<dt><strong>penalty</strong><span class="classifier">float</span></dt><dd><p>Regularization amount</p>
-</dd>
-<dt><strong>N</strong><span class="classifier">int</span></dt><dd><p>Number of points in the full data-set.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>torch.Tensor</em>) – (M x D) matrix of Nystroem centers</p></li>
+<li><p><strong>Y</strong> (<em>torch.Tensor</em>) – (M x 1) vector of targets corresponding to the Nystroem centers <cite>X</cite></p></li>
+<li><p><strong>alpha</strong> (<em>torch.Tensor</em>) – (M x 1) parameter vector (of the same dimension as <cite>Y</cite>) which gives the current
+solution to the optimization problem.</p></li>
+<li><p><strong>penalty</strong> (<em>float</em>) – Regularization amount</p></li>
+<li><p><strong>N</strong> (<em>int</em>) – Number of points in the full data-set.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -716,16 +680,10 @@ useful to help understand how the preconditioner works.</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -744,16 +702,10 @@ useful to help understand how the preconditioner works.</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -772,16 +724,10 @@ useful to help understand how the preconditioner works.</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -800,16 +746,10 @@ useful to help understand how the preconditioner works.</p>
 <p>Multiple right-hand sides are supported (by simply passing a 2D tensor for <cite>v</cite>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>v</strong></dt><dd><p>The right-hand side of the triangular system of equations</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>v</strong> – The right-hand side of the triangular system of equations</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>x</dt><dd><p>The solution, computed with the <cite>trsm</cite> function.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>x</em> – The solution, computed with the <cite>trsm</cite> function.</p>
 </dd>
 </dl>
 <div class="admonition seealso">

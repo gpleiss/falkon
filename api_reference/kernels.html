@@ -159,9 +159,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#dot-product-kernels">Dot-Product kernels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#exponential-kernel">Exponential kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#polynomial-kernel">Polynomial kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#linear-kernel">Linear kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sigmoid-kernel">Sigmoid kernel</a></li>
 </ul>
 </li>
 </ul>
@@ -198,9 +198,33 @@
 <li class="toctree-l3"><a class="reference internal" href="outofcore.html#gpu-lauum">gpu_lauum</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="mmv_ops.html">falkon.mmv_ops</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#run-keops-mmv">run_keops_mmv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cpu">fmm_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cpu-sparse">fmm_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cuda">fmm_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cuda-sparse">fmm_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cpu">fmmv_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cpu-sparse">fmmv_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cpu">fdmmv_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cpu-sparse">fdmmv_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cuda">fmmv_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cuda-sparse">fmmv_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cuda">fdmmv_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cuda-sparse">fdmmv_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#incore-fmmv">incore_fmmv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#incore-fdmmv">incore_fdmmv</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="sparse.html">falkon.sparse</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="sparse.html#sparsetensor">SparseTensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sparse.html#sparse-operations">Sparse operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="center_selector.html">falkon.center_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#centerselector">CenterSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#uniformselector">UniformSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#fixedselector">FixedSelector</a></li>
 </ul>
 </li>
 </ul>
@@ -301,30 +325,350 @@
 <div class="section" id="kernel">
 <h2>Kernel<a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="falkon.kernels.Kernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">Kernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">kernel_type</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel" title="Permalink to this definition">¶</a></dt>
+<dt id="falkon.kernels.kernel.Kernel">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.kernel.</code><code class="sig-name descname">Kernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">kernel_type</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract kernel class. Kernels should inherit from this class, overriding appropriate methods.</p>
+<p>To extend Falkon with new kernels, you should read the documentation of this class
+carefully. In particular, you will <strong>need</strong> to implement <a class="reference internal" href="#falkon.kernels.kernel.Kernel._prepare" title="falkon.kernels.kernel.Kernel._prepare"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_prepare()</span></code></a>, <a class="reference internal" href="#falkon.kernels.kernel.Kernel._apply" title="falkon.kernels.kernel.Kernel._apply"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply()</span></code></a> and
+<a class="reference internal" href="#falkon.kernels.kernel.Kernel._finalize" title="falkon.kernels.kernel.Kernel._finalize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_finalize()</span></code></a> methods.</p>
+<p>Other methods which should be optionally implemented are the sparse versions
+<a class="reference internal" href="#falkon.kernels.kernel.Kernel._prepare_sparse" title="falkon.kernels.kernel.Kernel._prepare_sparse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_prepare_sparse()</span></code></a> and <a class="reference internal" href="#falkon.kernels.kernel.Kernel._apply_sparse" title="falkon.kernels.kernel.Kernel._apply_sparse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply_sparse()</span></code></a> (note that there is no <cite>_finalize_sparse</cite>,
+since the <cite>_finalize</cite> takes as input a partial kernel matrix, and even with sparse data,
+kernel matrices are assumed to be dense. Therefore, even for sparse data, the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._finalize" title="falkon.kernels.kernel.Kernel._finalize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_finalize()</span></code></a>
+method will be used.</p>
+<p>To provide a KeOps implementation, you will have to inherit also from the
+<a class="reference internal" href="#falkon.kernels.keops_helpers.KeopsKernelMixin" title="falkon.kernels.keops_helpers.KeopsKernelMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">KeopsKernelMixin</span></code></a> class, and implement its abstract methods. In case
+a KeOps implementation is provided, you should make sure to override the
+<a class="reference internal" href="#falkon.kernels.kernel.Kernel._decide_mmv_impl" title="falkon.kernels.kernel.Kernel._decide_mmv_impl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_decide_mmv_impl()</span></code></a> and <a class="reference internal" href="#falkon.kernels.kernel.Kernel._decide_dmmv_impl" title="falkon.kernels.kernel.Kernel._decide_dmmv_impl"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_decide_dmmv_impl()</span></code></a> so that the KeOps implementation is
+effectively used. Have a look at the <a class="reference internal" href="#falkon.kernels.PolynomialKernel" title="falkon.kernels.PolynomialKernel"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.kernels.PolynomialKernel</span></code></a> class for
+an example of how to integrate KeOps in the kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – A short name for the kernel (e.g. “Gaussian”)</p></li>
+<li><p><strong>kernel_type</strong> – A short string describing the type of kernel. This may be used to create specialized
+functions in <a class="reference internal" href="mmv_ops.html#module-falkon.mmv_ops" title="falkon.mmv_ops"><code class="xref py py-mod docutils literal notranslate"><span class="pre">falkon.mmv_ops</span></code></a> which optimize for a specific kernel type.</p></li>
+<li><p><strong>opt</strong> – Base set of options to be used for operations involving this kernel.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the kernel matrix between <cite>X1</cite> and <cite>X2</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x M) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The kernel between <cite>X1</cite> and <cite>X2</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._apply">
+<em class="property">abstract </em><code class="sig-name descname">_apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#falkon.kernels.kernel.Kernel._apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main kernel operation, usually matrix multiplication.</p>
+<p>This function will be called with two blocks of data which may be subsampled on the
+first and second dimension (i.e. X1 may be of size <cite>n x d</cite> where <cite>n &lt;&lt; N</cite> and <cite>d &lt;&lt; D</cite>).
+The output shall be stored in the <cite>out</cite> argument, and not be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – (n x d) tensor. It is a block of the <cite>X1</cite> input matrix, possibly subsampled in the
+first dimension.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – (m x d) tensor. It is a block of the <cite>X2</cite> input matrix, possibly subsampled in the
+first dimension.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em>) – (n x m) tensor. A tensor in which the output of the operation shall be accumulated.
+This tensor is initialized to 0 before calling <cite>_apply</cite>, but in case of subsampling
+of the data along the second dimension, multiple calls will be needed to compute a
+single (n x m) output block. In such case, the first call to this method will have
+a zeroed tensor, while subsequent calls will simply reuse the same object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._apply_sparse">
+<em class="property">abstract </em><code class="sig-name descname">_apply_sparse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#falkon.kernels.kernel.Kernel._apply_sparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main kernel computation for sparse tensors.</p>
+<p>Unlike the :meth`_apply` method, the <cite>X1</cite> and <cite>X2</cite> tensors are only subsampled along
+the first dimension. Take note that the <cite>out</cite> tensor <strong>is not sparse</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>falkon.sparse.sparse_tensor.SparseTensor</em></a>) – Sparse tensor of shape (n x D), with possibly n &lt;&lt; N.</p></li>
+<li><p><strong>X2</strong> (<a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>falkon.sparse.sparse_tensor.SparseTensor</em></a>) – Sparse tensor of shape (m x D), with possibly m &lt;&lt; M.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em>) – Tensor of shape (n x m) which should hold a tile of the kernel. The output of this
+function (typically a matrix multiplication) should be placed in this tensor.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._decide_dmmv_impl">
+<code class="sig-name descname">_decide_dmmv_impl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel._decide_dmmv_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose which <cite>dmmv</cite> function to use for this data.</p>
+<p>Note that <cite>dmmv</cite> functions compute double kernel-vector products (see <a class="reference internal" href="#falkon.kernels.kernel.Kernel.dmmv" title="falkon.kernels.kernel.Kernel.dmmv"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dmmv()</span></code></a> for
+an explanation of what they are).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – First data matrix, of shape (N x D)</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – Second data matrix, of shape (M x D)</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Vector for the matrix-vector multiplication (M x T)</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Vector for the matrix-vector multiplicatoin (N x T)</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a>) – Falkon options. Options may be specified to force GPU or CPU usage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>dmmv_fn</em> – A function which allows to perform the <cite>mmv</cite> operation.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function decides based on the inputs: if the inputs are sparse, it will choose
+the sparse implementations; if CUDA is detected, it will choose the CUDA implementation;
+otherwise it will simply choose the basic CPU implementation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._decide_mm_impl">
+<code class="sig-name descname">_decide_mm_impl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel._decide_mm_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose which <cite>mm</cite> function to use for this data.</p>
+<p>Note that <cite>mm</cite> functions compute the kernel itself so <strong>KeOps may not be used</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – First data matrix, of shape (N x D)</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – Second data matrix, of shape (M x D)</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a>) – Falkon options. Options may be specified to force GPU or CPU usage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>mm_fn</em> – A function which allows to perform the <cite>mm</cite> operation.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function decides based on the inputs: if the inputs are sparse, it will choose
+the sparse implementations; if CUDA is detected, it will choose the CUDA implementation;
+otherwise it will simply choose the basic CPU implementation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._decide_mmv_impl">
+<code class="sig-name descname">_decide_mmv_impl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel._decide_mmv_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose which <cite>mmv</cite> function to use for this data.</p>
+<p>Note that <cite>mmv</cite> functions compute the kernel-vector product</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – First data matrix, of shape (N x D)</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – Second data matrix, of shape (M x D)</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – Vector for the matrix-vector multiplication (M x T)</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a>) – Falkon options. Options may be specified to force GPU or CPU usage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>mmv_fn</em> – A function which allows to perform the <cite>mmv</cite> operation.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function decides based on the inputs: if the inputs are sparse, it will choose
+the sparse implementations; if CUDA is detected, it will choose the CUDA implementation;
+otherwise it will simply choose the basic CPU implementation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._finalize">
+<em class="property">abstract </em><code class="sig-name descname">_finalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span></em>, <em class="sig-param"><span class="n">d</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel._finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Final actions to be performed on a partial kernel matrix.</p>
+<p>All elementwise operations on the kernel matrix should be performed in this method.
+Operations should be performed inplace by modifying the matrix <cite>A</cite>, to improve memory
+efficiency. If operations are not in-place, out-of-memory errors are possible when
+using the GPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>torch.Tensor</em>) – A (m x n) tile of the kernel matrix, as obtained by the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._apply" title="falkon.kernels.kernel.Kernel._apply"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply()</span></code></a> method.</p></li>
+<li><p><strong>d</strong> – Additional data, as computed by the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._prepare" title="falkon.kernels.kernel.Kernel._prepare"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_prepare()</span></code></a> method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>A</em> – The same tensor as the input, if operations are performed in-place. Otherwise
+another tensor of the same shape.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._prepare">
+<em class="property">abstract </em><code class="sig-name descname">_prepare</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="headerlink" href="#falkon.kernels.kernel.Kernel._prepare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pre-processing operations necessary to compute the kernel.</p>
+<p>This function will be called with two blocks of data which may be subsampled on the
+first dimension (i.e. X1 may be of size <cite>n x D</cite> where <cite>n &lt;&lt; N</cite>). The function should
+not modify <cite>X1</cite> and <cite>X2</cite>. If necessary, it may return some data which is then made available
+to the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._finalize" title="falkon.kernels.kernel.Kernel._finalize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_finalize()</span></code></a> method.</p>
+<p>For example, in the Gaussian kernel, this method is used to compute the squared norms
+of the datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – (n x D) tensor. It is a block of the <cite>X1</cite> input matrix, possibly subsampled in the
+first dimension.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – (m x D) tensor. It is a block of the <cite>X2</cite> input matrix, possibly subsampled in the
+first dimension.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Data which may be used for the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._finalize" title="falkon.kernels.kernel.Kernel._finalize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_finalize()</span></code></a> method. If no such information is</p></li>
+<li><p><em>necessary, returns None.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel._prepare_sparse">
+<em class="property">abstract </em><code class="sig-name descname">_prepare_sparse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel._prepare_sparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data preprocessing for sparse tensors.</p>
+<p>This is an equivalent to the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._prepare" title="falkon.kernels.kernel.Kernel._prepare"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_prepare()</span></code></a> method for sparse tensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>falkon.sparse.sparse_tensor.SparseTensor</em></a>) – Sparse tensor of shape (n x D), with possibly n &lt;&lt; N.</p></li>
+<li><p><strong>X2</strong> (<a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>falkon.sparse.sparse_tensor.SparseTensor</em></a>) – Sparse tensor of shape (m x D), with possibly m &lt;&lt; M.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Data derived from <cite>X1</cite> and <cite>X2</cite> which is needed by the <a class="reference internal" href="#falkon.kernels.kernel.Kernel._finalize" title="falkon.kernels.kernel.Kernel._finalize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_finalize()</span></code></a> method when</p></li>
+<li><p><em>finishing to compute a kernel tile.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel.dmmv">
+<code class="sig-name descname">dmmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel.dmmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute double matrix-vector multiplications where the matrix is the current kernel.</p>
+<p>The general form of <cite>dmmv</cite> operations is: <cite>Kernel(X2, X1) &#64; (Kernel(X1, X2) &#64; v + w)</cite>
+where if <cite>v</cite> is None, then we simply have <cite>Kernel(X2, X1) &#64; w</cite> and if <cite>w</cite> is None
+we remove the additive factor.
+<strong>At least one of `w` and `v` must be provided</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute matrix-vector products. This may also be a matrix of shape
+(N x T) but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (M x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (M x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># N is 100, D is 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># M is 150</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">dmmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([150, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="falkon.kernels.kernel.Kernel.mmv">
+<code class="sig-name descname">mmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.kernel.Kernel.mmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector multiplications where the matrix is the current kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (N x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">mmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([100, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="falkon.kernels.keops_helpers.KeopsKernelMixin">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.keops_helpers.</code><code class="sig-name descname">KeopsKernelMixin</code><a class="headerlink" href="#falkon.kernels.keops_helpers.KeopsKernelMixin" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt id="falkon.kernels.Kernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call self as a function.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.Kernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">kernel_type</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.Kernel.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.Kernel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="falkon.kernels.Kernel.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#falkon.kernels.Kernel.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dt id="falkon.kernels.keops_helpers.KeopsKernelMixin.keops_dmmv_helper">
+<code class="sig-name descname">keops_dmmv_helper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">kernel</span></em>, <em class="sig-param"><span class="n">out</span></em>, <em class="sig-param"><span class="n">opt</span></em>, <em class="sig-param"><span class="n">mmv_fn</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.keops_helpers.KeopsKernelMixin.keops_dmmv_helper" title="Permalink to this definition">¶</a></dt>
+<dd><p>performs fnc(X1*X2’, X1, X2)’ * ( fnc(X1*X2’, X1, X2) * v  +  w )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – N x D tensor</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – M x D tensor</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – M x T tensor. Often, T = 1 and this is a vector.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em>) – N x T tensor. Often, T = 1 and this is a vector.</p></li>
+<li><p><strong>kernel</strong> (<a class="reference internal" href="#falkon.kernels.kernel.Kernel" title="falkon.kernels.kernel.Kernel"><em>falkon.kernels.kernel.Kernel</em></a>) – Kernel instance to calculate this kernel. This is only here to preserve API
+structure.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor in which to store the output (M x T)</p></li>
+<li><p><strong>opt</strong> (<a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a>) – Options to be passed downstream</p></li>
+<li><p><strong>mmv_fn</strong> (<em>Callable</em>) – The function which performs the mmv operation. Two mmv operations are (usually)
+needed for a dmmv operation.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The double MMV is implemented as two separate calls to the user-supplied
+<cite>mmv_fn</cite>. The first one calculates the inner part of the formula (NxT)
+while the second calculates the outer matrix-vector multiplication which</p>
 </dd></dl>
 
 </dd></dl>
@@ -345,10 +689,10 @@ A larger sigma corresponds to a wide Gaussian, so that the relative influence of
 points will be high for computing the kernel at a given datum.
 On the opposite side of the spectrum, a small sigma means that only nearby points will
 influence the kernel.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl>
-<dt><strong>sigma</strong></dt><dd><p>The length-scale of the kernel.
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sigma</strong> – <p>The length-scale of the kernel.
 This can be a scalar, and then it corresponds to the standard deviation
 of Gaussian distribution from which the kernel is derived.
 It can also be a vector of size <cite>d</cite> or a matrix of size <cite>d*d</cite> where <cite>d</cite>
@@ -356,24 +700,12 @@ is the dimensionality of the data which will be used with the kernel.</p>
 <p>In this case sigma will be the inverse square of the standard deviation,
 so for example converting from the vectorial sigma to the scalar sigma can
 be done by <cite>vec_sigma = -1/(sigma**2)</cite></p>
-</dd>
-<dt><strong>opt</strong></dt><dd><p>Additional options to be forwarded to the matrix-vector multiplication
-routines.</p>
+</p></li>
+<li><p><strong>opt</strong> – Additional options to be forwarded to the matrix-vector multiplication
+routines.</p></li>
+</ul>
 </dd>
 </dl>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The Gaussian kernel with a single length-scale follows</p>
-<div class="math notranslate nohighlight">
-\[k(x, x') = \exp{-\dfrac{\lVert x - x' \rVert^2}{2\sigma^2}}\]</div>
-<p>When the length-scales are specified as a matrix, the RBF kernel is determined by</p>
-<div class="math notranslate nohighlight">
-\[k(x, x') = \exp{-\dfrac{1}{2}x\Sigma^{-1}x'}\]</div>
-<p>In both cases, the actual computation follows a different path, working on the expanded
-norm. The KeOps implementation is fully contained in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">_keops_mmv_impl()</span></code> method,
-while our implementation uses methods <code class="xref py py-meth docutils literal notranslate"><span class="pre">_prepare()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply()</span></code>, and <code class="xref py py-meth docutils literal notranslate"><span class="pre">_transform()</span></code>
-and is driven by the functions in <code class="xref py py-mod docutils literal notranslate"><span class="pre">falkon.mmv_ops</span></code>.</p>
 <p class="rubric">Examples</p>
 <p>Creating a Gaussian kernel with a single length-scale. Operations on this kernel will not
 use KeOps.</p>
@@ -394,34 +726,113 @@ use KeOps.</p>
 <span class="go">        [-0.2490, -0.5158,  4.4922]], dtype=torch.float64))  #random</span>
 </pre></div>
 </div>
+<p class="rubric">Notes</p>
+<p>The Gaussian kernel with a single length-scale follows</p>
+<div class="math notranslate nohighlight">
+\[k(x, x') = \exp{-\dfrac{\lVert x - x' \rVert^2}{2\sigma^2}}\]</div>
+<p>When the length-scales are specified as a matrix, the RBF kernel is determined by</p>
+<div class="math notranslate nohighlight">
+\[k(x, x') = \exp{-\dfrac{1}{2}x\Sigma^{-1}x'}\]</div>
+<p>In both cases, the actual computation follows a different path, working on the expanded
+norm.</p>
 <dl class="py method">
 <dt id="falkon.kernels.GaussianKernel.__call__">
 <code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Compute the kernel matrix between <cite>X1</cite> and <cite>X2</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x M) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The kernel between <cite>X1</cite> and <cite>X2</cite>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.GaussianKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>float<span class="p">, </span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dt id="falkon.kernels.GaussianKernel.dmmv">
+<code class="sig-name descname">dmmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.dmmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute double matrix-vector multiplications where the matrix is the current kernel.</p>
+<p>The general form of <cite>dmmv</cite> operations is: <cite>Kernel(X2, X1) &#64; (Kernel(X1, X2) &#64; v + w)</cite>
+where if <cite>v</cite> is None, then we simply have <cite>Kernel(X2, X1) &#64; w</cite> and if <cite>w</cite> is None
+we remove the additive factor.
+<strong>At least one of `w` and `v` must be provided</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute matrix-vector products. This may also be a matrix of shape
+(N x T) but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (M x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (M x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># N is 100, D is 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># M is 150</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">dmmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([150, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.GaussianKernel.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.GaussianKernel.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="falkon.kernels.GaussianKernel.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#falkon.kernels.GaussianKernel.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dt id="falkon.kernels.GaussianKernel.mmv">
+<code class="sig-name descname">mmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.GaussianKernel.mmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector multiplications where the matrix is the current kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (N x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">mmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([100, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -437,10 +848,7 @@ use KeOps.</p>
 in the parameter <cite>sigma</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>sigma</strong></dt><dd><p>The length-scale of the Laplacian kernel</p>
-</dd>
-</dl>
+<dd class="field-odd"><p><strong>sigma</strong> – The length-scale of the Laplacian kernel</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -450,31 +858,101 @@ in the parameter <cite>sigma</cite>.</p>
 <dl class="py method">
 <dt id="falkon.kernels.LaplacianKernel.__call__">
 <code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Compute the kernel matrix between <cite>X1</cite> and <cite>X2</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x M) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The kernel between <cite>X1</cite> and <cite>X2</cite>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.LaplacianKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.BaseOptions<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dt id="falkon.kernels.LaplacianKernel.dmmv">
+<code class="sig-name descname">dmmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.dmmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute double matrix-vector multiplications where the matrix is the current kernel.</p>
+<p>The general form of <cite>dmmv</cite> operations is: <cite>Kernel(X2, X1) &#64; (Kernel(X1, X2) &#64; v + w)</cite>
+where if <cite>v</cite> is None, then we simply have <cite>Kernel(X2, X1) &#64; w</cite> and if <cite>w</cite> is None
+we remove the additive factor.
+<strong>At least one of `w` and `v` must be provided</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute matrix-vector products. This may also be a matrix of shape
+(N x T) but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (M x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (M x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># N is 100, D is 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># M is 150</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">dmmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([150, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.LaplacianKernel.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.LaplacianKernel.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="falkon.kernels.LaplacianKernel.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#falkon.kernels.LaplacianKernel.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dt id="falkon.kernels.LaplacianKernel.mmv">
+<code class="sig-name descname">mmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LaplacianKernel.mmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector multiplications where the matrix is the current kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (N x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">mmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([100, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -483,77 +961,124 @@ in the parameter <cite>sigma</cite>.</p>
 </div>
 <div class="section" id="dot-product-kernels">
 <h2>Dot-Product kernels<a class="headerlink" href="#dot-product-kernels" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="exponential-kernel">
-<h3>Exponential kernel<a class="headerlink" href="#exponential-kernel" title="Permalink to this headline">¶</a></h3>
-<dl class="py class">
-<dt id="falkon.kernels.ExponentialKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">ExponentialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt id="falkon.kernels.ExponentialKernel.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call self as a function.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.ExponentialKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.ExponentialKernel.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.ExponentialKernel.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="falkon.kernels.ExponentialKernel.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#falkon.kernels.ExponentialKernel.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="polynomial-kernel">
 <h3>Polynomial kernel<a class="headerlink" href="#polynomial-kernel" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="falkon.kernels.PolynomialKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">PolynomialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">degree</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">PolynomialKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">beta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">degree</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polynomial kernel with multiplicative and additive constants.</p>
+<p>Follows the formula</p>
+<div class="math notranslate nohighlight">
+\[(\alpha * X_1^\top X_2 + \beta)^{\mathrm{degree}}\]</div>
+<p>Where all operations apart from the matrix multiplication are taken element-wise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float-like</em>) – Multiplicative constant</p></li>
+<li><p><strong>beta</strong> (<em>float-like</em>) – Additive constant</p></li>
+<li><p><strong>degree</strong> (<em>float-like</em>) – Power of the polynomial kernel</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options which will be used in downstream kernel operations.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
 <dt id="falkon.kernels.PolynomialKernel.__call__">
 <code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Compute the kernel matrix between <cite>X1</cite> and <cite>X2</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x M) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The kernel between <cite>X1</cite> and <cite>X2</cite>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.PolynomialKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span></em>, <em class="sig-param"><span class="n">beta</span></em>, <em class="sig-param"><span class="n">degree</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dt id="falkon.kernels.PolynomialKernel.dmmv">
+<code class="sig-name descname">dmmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.dmmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute double matrix-vector multiplications where the matrix is the current kernel.</p>
+<p>The general form of <cite>dmmv</cite> operations is: <cite>Kernel(X2, X1) &#64; (Kernel(X1, X2) &#64; v + w)</cite>
+where if <cite>v</cite> is None, then we simply have <cite>Kernel(X2, X1) &#64; w</cite> and if <cite>w</cite> is None
+we remove the additive factor.
+<strong>At least one of `w` and `v` must be provided</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute matrix-vector products. This may also be a matrix of shape
+(N x T) but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (M x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (M x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># N is 100, D is 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># M is 150</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">dmmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([150, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.PolynomialKernel.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="falkon.kernels.PolynomialKernel.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="falkon.kernels.PolynomialKernel.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#falkon.kernels.PolynomialKernel.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dt id="falkon.kernels.PolynomialKernel.mmv">
+<code class="sig-name descname">mmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.PolynomialKernel.mmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector multiplications where the matrix is the current kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (N x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">mmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([100, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -563,52 +1088,247 @@ in the parameter <cite>sigma</cite>.</p>
 <h3>Linear kernel<a class="headerlink" href="#linear-kernel" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="falkon.kernels.LinearKernel">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">LinearKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">LinearKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">beta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Linear Kernel with optional scaling and translation parameters.</p>
 <p>The kernel implemented here is the covariance function in the original
 input space (i.e. <cite>X &#64; X.T</cite>) with optional parameters to translate
 and scale the kernel: <cite>beta + 1/(sigma**2) * X &#64; X.T</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>beta</strong><span class="classifier">float (optional, default 0.0)</span></dt><dd><p>Additive constant for the kernel</p>
-</dd>
-<dt><strong>sigma</strong><span class="classifier">float (optional, default 1.0)</span></dt><dd><p>Multiplicative constant for the kernel. The kernel will
-be multiplied by the inverse of sigma squared.</p>
-</dd>
-<dt><strong>opt</strong><span class="classifier">Union(Dict, CompOpt)</span></dt><dd><p>Options dictionary.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>beta</strong> (<em>float-like</em>) – Additive constant for the kernel, default: 0.0</p></li>
+<li><p><strong>sigma</strong> (<em>float-like</em>) – Multiplicative constant for the kernel. The kernel will
+be multiplied by the inverse of sigma squared. Default: 1.0</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options which will be used in downstream kernel operations.</p></li>
+</ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">LinearKernel</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 100 samples in 3 dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel_matrix</span> <span class="o">=</span> <span class="n">k</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">kernel_matrix</span><span class="p">,</span> <span class="n">X</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt id="falkon.kernels.LinearKernel.__call__">
 <code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Compute the kernel matrix between <cite>X1</cite> and <cite>X2</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x M) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The kernel between <cite>X1</cite> and <cite>X2</cite>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.LinearKernel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dt id="falkon.kernels.LinearKernel.dmmv">
+<code class="sig-name descname">dmmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.dmmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute double matrix-vector multiplications where the matrix is the current kernel.</p>
+<p>The general form of <cite>dmmv</cite> operations is: <cite>Kernel(X2, X1) &#64; (Kernel(X1, X2) &#64; v + w)</cite>
+where if <cite>v</cite> is None, then we simply have <cite>Kernel(X2, X1) &#64; w</cite> and if <cite>w</cite> is None
+we remove the additive factor.
+<strong>At least one of `w` and `v` must be provided</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute matrix-vector products. This may also be a matrix of shape
+(N x T) but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (M x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (M x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># N is 100, D is 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># M is 150</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">dmmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([150, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.LinearKernel.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return repr(self).</p>
+<dt id="falkon.kernels.LinearKernel.mmv">
+<code class="sig-name descname">mmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.mmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector multiplications where the matrix is the current kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (N x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">mmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([100, 1])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sigmoid-kernel">
+<h3>Sigmoid kernel<a class="headerlink" href="#sigmoid-kernel" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt id="falkon.kernels.SigmoidKernel">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.kernels.</code><code class="sig-name descname">SigmoidKernel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">alpha</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">beta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.SigmoidKernel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sigmoid (or hyperbolic tangent) kernel function, with additive and multiplicative constants.</p>
+<p>Follows the formula</p>
+<div class="math notranslate nohighlight">
+\[k(x, y) = \tanh(\alpha x^\top y + \beta)\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha</strong> (<em>float-like</em>) – Multiplicative constant</p></li>
+<li><p><strong>beta</strong> (<em>float-like</em>) – Multiplicative constant</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options which will be used in downstream kernel operations.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="falkon.kernels.SigmoidKernel.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.SigmoidKernel.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the kernel matrix between <cite>X1</cite> and <cite>X2</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x M) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The kernel between <cite>X1</cite> and <cite>X2</cite>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="falkon.kernels.LinearKernel.__str__">
-<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.LinearKernel.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return str(self).</p>
+<dt id="falkon.kernels.SigmoidKernel.dmmv">
+<code class="sig-name descname">dmmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.SigmoidKernel.dmmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute double matrix-vector multiplications where the matrix is the current kernel.</p>
+<p>The general form of <cite>dmmv</cite> operations is: <cite>Kernel(X2, X1) &#64; (Kernel(X1, X2) &#64; v + w)</cite>
+where if <cite>v</cite> is None, then we simply have <cite>Kernel(X2, X1) &#64; w</cite> and if <cite>w</cite> is None
+we remove the additive factor.
+<strong>At least one of `w` and `v` must be provided</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>w</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – A vector to compute matrix-vector products. This may also be a matrix of shape
+(N x T) but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (M x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (M x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># N is 100, D is 3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># M is 150</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">dmmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([150, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
-<dl class="py attribute">
-<dt id="falkon.kernels.LinearKernel.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#falkon.kernels.LinearKernel.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dl class="py method">
+<dt id="falkon.kernels.SigmoidKernel.mmv">
+<code class="sig-name descname">mmv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X1</span></em>, <em class="sig-param"><span class="n">X2</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">out</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.kernels.SigmoidKernel.mmv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute matrix-vector multiplications where the matrix is the current kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X1</strong> (<em>torch.Tensor</em>) – The first data-matrix for computing the kernel. Of shape (N x D):
+N samples in D dimensions.</p></li>
+<li><p><strong>X2</strong> (<em>torch.Tensor</em>) – The second data-matrix for computing the kernel. Of shape (M x D):
+M samples in D dimensions. Set <cite>X2 == X1</cite> to compute a symmetric kernel.</p></li>
+<li><p><strong>v</strong> (<em>torch.Tensor</em>) – A vector to compute the matrix-vector product. This may also be a matrix of shape
+(M x T), but if <cite>T</cite> is very large the operations will be much slower.</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em><em> or </em><em>None</em>) – Optional tensor of shape (N x T) to hold the output. If not provided it will
+be created.</p></li>
+<li><p><strong>opt</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions"><em>FalkonOptions</em></a><em>]</em>) – Options to be used for computing the operation. Useful are the memory size options
+and CUDA options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The (N x T) output.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="n">falkon</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">GaussianKernel</span><span class="p">(</span><span class="n">sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># You can substitute the Gaussian kernel by any other.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">mmv</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">torch.Size([100, 1])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

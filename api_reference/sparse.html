@@ -39,7 +39,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="falkon.ooc_ops" href="outofcore.html" /> 
+    <link rel="next" title="falkon.center_selection" href="center_selector.html" />
+    <link rel="prev" title="falkon.mmv_ops" href="mmv_ops.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -158,9 +159,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="kernels.html#dot-product-kernels">Dot-Product kernels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="kernels.html#exponential-kernel">Exponential kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="kernels.html#polynomial-kernel">Polynomial kernel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="kernels.html#linear-kernel">Linear kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kernels.html#sigmoid-kernel">Sigmoid kernel</a></li>
 </ul>
 </li>
 </ul>
@@ -197,9 +198,33 @@
 <li class="toctree-l3"><a class="reference internal" href="outofcore.html#gpu-lauum">gpu_lauum</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="mmv_ops.html">falkon.mmv_ops</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#run-keops-mmv">run_keops_mmv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cpu">fmm_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cpu-sparse">fmm_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cuda">fmm_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmm-cuda-sparse">fmm_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cpu">fmmv_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cpu-sparse">fmmv_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cpu">fdmmv_cpu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cpu-sparse">fdmmv_cpu_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cuda">fmmv_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fmmv-cuda-sparse">fmmv_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cuda">fdmmv_cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#fdmmv-cuda-sparse">fdmmv_cuda_sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#incore-fmmv">incore_fmmv</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mmv_ops.html#incore-fdmmv">incore_fdmmv</a></li>
+</ul>
+</li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">falkon.sparse</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sparsetensor">SparseTensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sparse-operations">Sparse operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="center_selector.html">falkon.center_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#centerselector">CenterSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#uniformselector">UniformSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="center_selector.html#fixedselector">FixedSelector</a></li>
 </ul>
 </li>
 </ul>
@@ -300,53 +325,43 @@
 <div class="section" id="sparsetensor">
 <h2>SparseTensor<a class="headerlink" href="#sparsetensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="falkon.sparse.SparseTensor">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">SparseTensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">indexptr</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>int<span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">sparse_type</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>falkon.sparse.sparse_tensor.SparseType<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">csr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.sparse.SparseTensor" title="Permalink to this definition">¶</a></dt>
+<dt id="falkon.sparse.sparse_tensor.SparseTensor">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.sparse.sparse_tensor.</code><code class="sig-name descname">SparseTensor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">indexptr</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">index</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">data</span><span class="p">:</span> <span class="n">torch.Tensor</span></em>, <em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>int<span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">sparse_type</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span><a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseType" title="falkon.sparse.sparse_tensor.SparseType">falkon.sparse.sparse_tensor.SparseType</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">csr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.sparse.sparse_tensor.SparseTensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper class to represent sparse 2D matrices in CSR or CSC format.</p>
 <p>The wrapper holds three 1D torch tensors which give the sparse representation
 (an index pointer, an index and the non-zero values of the matrix).
 It supports some of the common torch tensor management functions (e.g. <cite>pin_memory</cite>, <cite>device</cite>,
 <cite>size</cite>) and conversion to and from the corresponding scipy sparse matrix representation.
 It does <strong>not</strong> define any mathematical function on sparse matrices, which are
-instead defined separately (see <a class="reference internal" href="#falkon.sparse.sparse_matmul" title="falkon.sparse.sparse_matmul"><code class="xref py py-func docutils literal notranslate"><span class="pre">falkon.sparse.sparse_matmul()</span></code></a> for example).</p>
+instead defined separately (see <a class="reference internal" href="#falkon.sparse.sparse_matmul" title="falkon.sparse.sparse_matmul"><code class="xref py py-func docutils literal notranslate"><span class="pre">sparse_matmul()</span></code></a> for example).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>indexptr</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Array of row (or column for CSC data) pointers into the
-<cite>index</cite> and <cite>data</cite> arrays. Should be either of type long or int.</p>
-</dd>
-<dt><strong>index</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Array of column (or row for CSC data) indices for non-zero elements.
-Should be either of type long or int.</p>
-</dd>
-<dt><strong>data</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Array of the non-zero elements for the sparse matrix.</p>
-</dd>
-<dt><strong>size</strong><span class="classifier">Tuple[int, int]</span></dt><dd><p>Shape of the 2D tensor (rows, columns).</p>
-</dd>
-<dt><strong>sparse_type: str or SparseType</strong></dt><dd><p>Whether the matrix should be interpreted as CSR or CSC format.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indexptr</strong> (<em>torch.Tensor</em>) – Array of row (or column for CSC data) pointers into the
+<cite>index</cite> and <cite>data</cite> arrays. Should be either of type long or int.</p></li>
+<li><p><strong>index</strong> (<em>torch.Tensor</em>) – Array of column (or row for CSC data) indices for non-zero elements.
+Should be either of type long or int.</p></li>
+<li><p><strong>data</strong> (<em>torch.Tensor</em>) – Array of the non-zero elements for the sparse matrix.</p></li>
+<li><p><strong>size</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – Shape of the 2D tensor (rows, columns).</p></li>
+<li><p><strong>sparse_type</strong> (<em>str</em><em> or </em><a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseType" title="falkon.sparse.sparse_tensor.SparseType"><em>falkon.sparse.sparse_tensor.SparseType</em></a>) – Whether the matrix should be interpreted as CSR or CSC format.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="falkon.sparse.SparseTensor.narrow_rows">
-<code class="sig-name descname">narrow_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; falkon.sparse.sparse_tensor.SparseTensor<a class="headerlink" href="#falkon.sparse.SparseTensor.narrow_rows" title="Permalink to this definition">¶</a></dt>
+<dt id="falkon.sparse.sparse_tensor.SparseTensor.narrow_rows">
+<code class="sig-name descname">narrow_rows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">length</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><a class="headerlink" href="#falkon.sparse.sparse_tensor.SparseTensor.narrow_rows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a subset of contiguous rows from the sparse matrix.
 If this is a CSC sparse matrix, instead of taking contiguous rows we take contiguous
 columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>start: int or None</strong></dt><dd><p>The index of the first row to select. If None will be assumed to be 0.</p>
-</dd>
-<dt><strong>length: int or None</strong></dt><dd><p>The number of rows to select. If None will be assumed to be all rows after <cite>start</cite>.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>int</em><em> or </em><em>None</em>) – The index of the first row to select. If None will be assumed to be 0.</p></li>
+<li><p><strong>length</strong> (<em>int</em><em> or </em><em>None</em>) – The number of rows to select. If None will be assumed to be all rows after <cite>start</cite>.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>SparseTensor</dt><dd><p>A new <cite>SparseTensor</cite> object with <cite>length</cite> rows.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><em>SparseTensor</em> – A new <a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">SparseTensor</span></code></a> object with <cite>length</cite> rows.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -356,8 +371,8 @@ columns.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="falkon.sparse.SparseType">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">SparseType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.sparse.SparseType" title="Permalink to this definition">¶</a></dt>
+<dt id="falkon.sparse.sparse_tensor.SparseType">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.sparse.sparse_tensor.</code><code class="sig-name descname">SparseType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.sparse.sparse_tensor.SparseType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether a <cite>SparseTensor</cite> is in CSC or CSR format.</p>
 </dd></dl>
 
@@ -366,51 +381,40 @@ columns.</p>
 <h2>Sparse operations<a class="headerlink" href="#sparse-operations" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="falkon.sparse.sparse_matmul">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_matmul</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_matmul" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_matmul</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a></span></em>, <em class="sig-param"><span class="n">B</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a></span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_matmul" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sparse*Sparse matrix multiplication. Output will be copied into dense <cite>out</cite> matrix.</p>
 <p>This function can be applied to CPU or CUDA tensors (but all tensors must
 be  on the same device).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>A</strong><span class="classifier">SparseTensor</span></dt><dd><p>N x D, sparse matrix.</p>
-</dd>
-<dt><strong>B</strong><span class="classifier">SparseTensor</span></dt><dd><p>D x M, sparse matrix</p>
-</dd>
-<dt><strong>out</strong><span class="classifier">torch.Tensor</span></dt><dd><p>Dense N x M tensor, it will hold the output of the multiplication.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>SparseTensor</em></a>) – N x D, sparse matrix.</p></li>
+<li><p><strong>B</strong> (<a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>SparseTensor</em></a>) – D x M, sparse matrix</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em>) – Dense N x M tensor, it will hold the output of the multiplication.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>out</strong><span class="classifier">torch.Tensor</span></dt><dd><p>The same tensor as the input <cite>out</cite> parameter.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The same tensor as the input <cite>out</cite> parameter.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="falkon.sparse.sparse_square_norm">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_square_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_square_norm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_square_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a></span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">torch.Tensor</span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_square_norm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Row-wise squared l2 norm of a sparse 2D matrix.</p>
 <p>The operation is equivalent to squaring all elements of the matrix, and summing up the rows.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>A</strong><span class="classifier">SparseTensor</span></dt><dd><p>The 2D matrix. Since we compute row-wise norms, the matrix must be in CSR format (for
-efficiency).</p>
-</dd>
-<dt><strong>out</strong><span class="classifier">torch.Tensor</span></dt><dd><p>A dense tensor with the same number of rows as matrix <cite>A</cite>. Will contain the output
-of the squared-norm operation.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>SparseTensor</em></a>) – The 2D matrix. Since we compute row-wise norms, the matrix must be in CSR format (for
+efficiency).</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em>) – A dense tensor with the same number of rows as matrix <cite>A</cite>. Will contain the output
+of the squared-norm operation.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>out</strong><span class="classifier">torch.Tensor</span></dt><dd><p>The same tensor as the input <cite>out</cite> parameter.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The same tensor as the input <cite>out</cite> parameter.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -419,24 +423,19 @@ of the squared-norm operation.</p>
 
 <dl class="py function">
 <dt id="falkon.sparse.sparse_norm">
-<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n">falkon.sparse.sparse_tensor.SparseTensor</span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_norm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">falkon.sparse.</code><code class="sig-name descname">sparse_norm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">A</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a></span></em>, <em class="sig-param"><span class="n">out</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#falkon.sparse.sparse_norm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Row-wise l2 norm of a sparse 2D matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>A</strong><span class="classifier">SparseTensor</span></dt><dd><p>The 2D matrix. Since we compute row-wise norms, the matrix must be in CSR format (for
-efficiency).</p>
-</dd>
-<dt><strong>out</strong><span class="classifier">torch.Tensor</span></dt><dd><p>A dense tensor with the same number of rows as matrix <cite>A</cite>. Will contain the output
-of the norm operation.</p>
-</dd>
-</dl>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor"><em>SparseTensor</em></a>) – The 2D matrix. Since we compute row-wise norms, the matrix must be in CSR format (for
+efficiency).</p></li>
+<li><p><strong>out</strong> (<em>torch.Tensor</em>) – A dense tensor with the same number of rows as matrix <cite>A</cite>. Will contain the output
+of the norm operation.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>out</strong><span class="classifier">torch.Tensor</span></dt><dd><p>The same tensor as the input <cite>out</cite> parameter.</p>
-</dd>
-</dl>
+<dd class="field-even"><p><strong>out</strong> (<em>torch.Tensor</em>) – The same tensor as the input <cite>out</cite> parameter.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -454,8 +453,10 @@ of the norm operation.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="center_selector.html" class="btn btn-neutral float-right" title="falkon.center_selection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="outofcore.html" class="btn btn-neutral float-left" title="falkon.ooc_ops" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="mmv_ops.html" class="btn btn-neutral float-left" title="falkon.mmv_ops" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

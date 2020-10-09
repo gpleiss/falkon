@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>falkon.optim &mdash; falkon 0.6.1 documentation</title>
+  <title>falkon.center_selection &mdash; falkon 0.6.1 documentation</title>
   
 
   
@@ -39,8 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="falkon.ooc_ops" href="outofcore.html" />
-    <link rel="prev" title="falkon.preconditioner" href="preconditioner.html" /> 
+    <link rel="prev" title="falkon.sparse" href="sparse.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -184,11 +183,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">falkon.optim</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#optimizer">Optimizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#conjugate-gradient-methods">Conjugate gradient methods</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#conjugategradient">ConjugateGradient</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#falkonconjugategradient">FalkonConjugateGradient</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimization.html">falkon.optim</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="optimization.html#optimizer">Optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimization.html#conjugate-gradient-methods">Conjugate gradient methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="optimization.html#conjugategradient">ConjugateGradient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="optimization.html#falkonconjugategradient">FalkonConjugateGradient</a></li>
 </ul>
 </li>
 </ul>
@@ -221,10 +220,10 @@
 <li class="toctree-l3"><a class="reference internal" href="sparse.html#sparse-operations">Sparse operations</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="center_selector.html">falkon.center_selection</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="center_selector.html#centerselector">CenterSelector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="center_selector.html#uniformselector">UniformSelector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="center_selector.html#fixedselector">FixedSelector</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">falkon.center_selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#centerselector">CenterSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uniformselector">UniformSelector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixedselector">FixedSelector</a></li>
 </ul>
 </li>
 </ul>
@@ -277,13 +276,13 @@
         
           <li><a href="index.html">API Reference</a> &raquo;</li>
         
-      <li>falkon.optim</li>
+      <li>falkon.center_selection</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api_reference/optimization.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api_reference/center_selector.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -320,34 +319,131 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="module-falkon.optim">
-<span id="falkon-optim"></span><h1>falkon.optim<a class="headerlink" href="#module-falkon.optim" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="optimizer">
-<h2>Optimizer<a class="headerlink" href="#optimizer" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-falkon.center_selection">
+<span id="falkon-center-selection"></span><h1>falkon.center_selection<a class="headerlink" href="#module-falkon.center_selection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="centerselector">
+<h2>CenterSelector<a class="headerlink" href="#centerselector" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="falkon.optim.Optimizer">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.optim.</code><code class="sig-name descname">Optimizer</code><a class="headerlink" href="#falkon.optim.Optimizer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="falkon.center_selection.CenterSelector">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.center_selection.</code><code class="sig-name descname">CenterSelector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">random_gen</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.center_selection.CenterSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the center selector with a random number generator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>random_gen</strong> – A numpy random number generator object.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="falkon.center_selection.CenterSelector.select">
+<em class="property">abstract </em><code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">Y</span></em>, <em class="sig-param"><span class="n">M</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.center_selection.CenterSelector.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for selecting <cite>M</cite> centers from the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – The full input dataset (or a representation of it)</p></li>
+<li><p><strong>Y</strong> – The full input labels (this may be None)</p></li>
+<li><p><strong>M</strong> – The number of centers to be selected</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>X_centers</em> – If Y is None this is the only output: M centers selected from the data.</p></li>
+<li><p><em>Y_centers</em> – If Y is not empty, a set of label centers shall be returned as well.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
-<div class="section" id="conjugate-gradient-methods">
-<h2>Conjugate gradient methods<a class="headerlink" href="#conjugate-gradient-methods" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="conjugategradient">
-<h3>ConjugateGradient<a class="headerlink" href="#conjugategradient" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="uniformselector">
+<h2>UniformSelector<a class="headerlink" href="#uniformselector" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="falkon.optim.ConjugateGradient">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.optim.</code><code class="sig-name descname">ConjugateGradient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>falkon.options.ConjugateGradientOptions<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.optim.ConjugateGradient" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="falkon.center_selection.UniformSelector">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.center_selection.</code><code class="sig-name descname">UniformSelector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">random_gen</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.center_selection.UniformSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#falkon.center_selection.CenterSelector" title="falkon.center_selection.CenterSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.center_selection.CenterSelector</span></code></a></p>
+<dl class="py method">
+<dt id="falkon.center_selection.UniformSelector.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">, </span>Tuple<span class="p">[</span>Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span><span class="p">, </span>torch.Tensor<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#falkon.center_selection.UniformSelector.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select M observations from 2D tensor <cite>X</cite>, preserving device and memory order.</p>
+<p>The selection strategy is uniformly at random. To control the randomness,
+pass an appropriate numpy random generator to this class’s constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – N x D tensor containing the whole input dataset. We have that N &lt;= M.</p></li>
+<li><p><strong>Y</strong> – Optional N x T tensor containing the input targets. If <cite>Y</cite> is provided,
+the same observations selected for <cite>X</cite> will also be selected from <cite>Y</cite>.
+Certain models (such as <a class="reference internal" href="models.html#falkon.models.LogisticFalkon" title="falkon.models.LogisticFalkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.LogisticFalkon</span></code></a>) require centers to be
+extracted from both predictors and targets, while others (such as
+<a class="reference internal" href="models.html#falkon.models.Falkon" title="falkon.models.Falkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.Falkon</span></code></a>) only require the centers from the predictors.</p></li>
+<li><p><strong>M</strong> – The number of observations to choose. M &lt;= N, otherwise M is forcibly set to N
+with a warning.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>X_M</em> – The randomly selected centers. They will be in a new, memory-contiguous tensor.
+All characteristics of the input tensor will be preserved.</p></li>
+<li><p><em>(X_M, Y_M)</em> – If <cite>Y</cite> was different than <cite>None</cite> then the entries of <cite>Y</cite> corresponding to the
+selected centers of <cite>X</cite> will also be returned.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
-<div class="section" id="falkonconjugategradient">
-<h3>FalkonConjugateGradient<a class="headerlink" href="#falkonconjugategradient" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="fixedselector">
+<h2>FixedSelector<a class="headerlink" href="#fixedselector" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt id="falkon.optim.FalkonConjugateGradient">
-<em class="property">class </em><code class="sig-prename descclassname">falkon.optim.</code><code class="sig-name descname">FalkonConjugateGradient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kernel</span></em>, <em class="sig-param"><span class="n">preconditioner</span></em>, <em class="sig-param"><span class="n">opt</span><span class="p">:</span> <span class="n"><a class="reference internal" href="options.html#falkon.options.FalkonOptions" title="falkon.options.FalkonOptions">falkon.options.FalkonOptions</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.optim.FalkonConjugateGradient" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="falkon.center_selection.FixedSelector">
+<em class="property">class </em><code class="sig-prename descclassname">falkon.center_selection.</code><code class="sig-name descname">FixedSelector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">centers</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">y_centers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#falkon.center_selection.FixedSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#falkon.center_selection.CenterSelector" title="falkon.center_selection.CenterSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.center_selection.CenterSelector</span></code></a></p>
+<p>Center selector which always picks the same centers.</p>
+<p>The fixed centers are specified at class initialization time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>centers</strong> – Tensor of data-centers to be used.</p></li>
+<li><p><strong>y_centers</strong> – Optional tensor of label-centers to be used. If this is empty, calling <a class="reference internal" href="#falkon.center_selection.FixedSelector.select" title="falkon.center_selection.FixedSelector.select"><code class="xref py py-meth docutils literal notranslate"><span class="pre">select()</span></code></a> with
+a non-empty <cite>Y</cite> argument will throw an exception</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="falkon.center_selection.FixedSelector.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>torch.Tensor<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">M</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">, </span>Tuple<span class="p">[</span>Union<span class="p">[</span>torch.Tensor<span class="p">, </span><a class="reference internal" href="sparse.html#falkon.sparse.sparse_tensor.SparseTensor" title="falkon.sparse.sparse_tensor.SparseTensor">falkon.sparse.sparse_tensor.SparseTensor</a><span class="p">]</span><span class="p">, </span>torch.Tensor<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#falkon.center_selection.FixedSelector.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the fixed centers with which this instance was created</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – N x D tensor containing the whole input dataset. We have that N &lt;= M.</p></li>
+<li><p><strong>Y</strong> – Optional N x T tensor containing the input targets. If <cite>Y</cite> is provided,
+the same observations selected for <cite>X</cite> will also be selected from <cite>Y</cite>.
+Certain models (such as <a class="reference internal" href="models.html#falkon.models.LogisticFalkon" title="falkon.models.LogisticFalkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.LogisticFalkon</span></code></a>) require centers to be
+extracted from both predictors and targets, while others (such as
+<a class="reference internal" href="models.html#falkon.models.Falkon" title="falkon.models.Falkon"><code class="xref py py-class docutils literal notranslate"><span class="pre">falkon.models.Falkon</span></code></a>) only require the centers from the predictors.</p></li>
+<li><p><strong>M</strong> – The number of observations to choose. <strong>This parameter is ignored</strong>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>X_M</em> – The randomly selected centers. They will be in a new, memory-contiguous tensor.
+All characteristics of the input tensor will be preserved.</p></li>
+<li><p><em>(X_M, Y_M)</em> – If <cite>Y</cite> was different than <cite>None</cite> then the entries of <cite>Y</cite> corresponding to the
+selected centers of <cite>X</cite> will also be returned.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
-</div>
+</dd></dl>
+
 </div>
 </div>
 
@@ -359,10 +455,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="outofcore.html" class="btn btn-neutral float-right" title="falkon.ooc_ops" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="preconditioner.html" class="btn btn-neutral float-left" title="falkon.preconditioner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="sparse.html" class="btn btn-neutral float-left" title="falkon.sparse" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
